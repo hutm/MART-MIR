@@ -24,6 +24,7 @@ import org.mart.crs.exec.operation.eval.chord.confusion.ConfusionChordManager;
 import org.mart.crs.logging.CRSLogger;
 import org.mart.crs.management.label.LabelsParser;
 import org.mart.crs.management.label.chord.ChordSegment;
+import org.mart.crs.management.label.chord.ChordStructure;
 import org.mart.crs.management.label.chord.ChordType;
 import org.mart.crs.utils.filefilter.ExtensionFileFilter;
 import org.mart.crs.utils.helper.Helper;
@@ -120,10 +121,10 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
             if (GTFilePath == null) {
                 continue;
             }
-//            chordList = (new ChordStructure(song.getAbsolutePath())).getChordSegments();
-//            chordListGT = (new ChordStructure(GTFilePath)).getChordSegments();
-            chordList = LabelsParser.getSegments(song.getAbsolutePath(), true);
-            chordListGT = LabelsParser.getSegments(GTFilePath, true);
+            chordList = (new ChordStructure(song.getAbsolutePath())).getChordSegments();
+            chordListGT = (new ChordStructure(GTFilePath)).getChordSegments();
+//            chordList = LabelsParser.getSegments(song.getAbsolutePath(), true);
+//            chordListGT = LabelsParser.getSegments(GTFilePath, true);
             chordEvalResults.add(compareLabels(chordList, chordListGT, song.getName()));
         }
     }
@@ -206,9 +207,11 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
 
             writer.write("----------------------------------------\r\n");
             chordRecognitionRateTimeBasedGlobal = correctTimeGlobal / knownChordTimeGlobal;
-            writer.write(String.format("%5.5f %5.5f %5.5f\r\n",
-                    chordRecognitionRateTimeBasedGlobal, chordRecognitionRateGlobal /= length, fragmentationGlobal /= length));
+            String finalResultsstring = String.format("%5.5f %5.5f %5.5f\r\n",
+                    chordRecognitionRateTimeBasedGlobal, chordRecognitionRateGlobal /= length, fragmentationGlobal /= length);
 
+            writer.write(finalResultsstring);
+            logger.info(finalResultsstring);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

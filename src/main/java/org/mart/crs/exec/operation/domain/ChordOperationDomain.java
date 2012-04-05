@@ -141,8 +141,8 @@ public class ChordOperationDomain extends OperationDomain {
     public List<AbstractCRSEvaluator> getEvaluators() {
         List<AbstractCRSEvaluator> outList = new ArrayList<AbstractCRSEvaluator>();
         outList.add(new ChordEvaluator());
-        outList.add(new ChordEvaluatorNema());                   //TODO for more detailed evaluation metrics
-        outList.add(new ChordEvaluatorNemaFullDictionary());
+//        outList.add(new ChordEvaluatorNema());                   //TODO for more detailed evaluation metrics
+//        outList.add(new ChordEvaluatorNemaFullDictionary());
         return outList;
     }
 

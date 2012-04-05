@@ -143,7 +143,7 @@ public class RecognizeConventionalVersionWithLMOperation extends RecognizeOperat
                     if (isMIREX && ConfigSettings.outPathExternal != null && ConfigSettings.outPathExternal.length() > 0) {   //TODO refactor this ugly staff!!!
                         HelperFile.copyDirectory(recognizedFolder, ConfigSettings.outPathExternal);
                     } else {
-                        EvaluatorOld.makeEvaluation(recognizedFolder, labelsGroundTruthDir, resultsDir + File.separator + resultsDirName + ".txt");
+//                        EvaluatorOld.makeEvaluation(recognizedFolder, labelsGroundTruthDir, resultsDir + File.separator + resultsDirName + ".txt");
                     }
 
                     //Now run the second pass evaluation

@@ -32,6 +32,9 @@ import org.mart.crs.management.label.chord.ChordType;
 import org.mart.crs.management.label.chord.Root;
 import org.mart.crs.model.htk.HTKResultsParser;
 import org.mart.crs.model.htk.parser.chord.ChordHTKParser;
+import org.mart.crs.model.htk.parser.chord.ChordHTKParserFromLattice;
+import org.mart.crs.model.htk.parser.chord.ChordHTKParserFromLatticeBeatSynchronous;
+import org.mart.crs.model.htk.parser.chord.ChordHTKParserPerBeat;
 import org.mart.crs.utils.filefilter.ExtensionFileFilter;
 import org.mart.crs.utils.helper.Helper;
 import org.mart.crs.utils.helper.HelperFile;
@@ -116,9 +119,19 @@ public class RecognizeOperation extends AbstractCRSOperation {
         String outFilePath = decodedOutPath + String.format("%d_%2.1f", gaussianNumber, penalty);
         hvite(trainedModelsDir, hmmFolder + "_" + gaussianNumber, penalty, outFilePath);
         String recognizedFolder = resultsDir + File.separator + "-";
-        ChordHTKParser parser = new ChordHTKParser(outFilePath, recognizedFolder);
-        parser.run();
-        HTKResultsParser.parse(outFilePath, recognizedFolder);
+
+//        ChordHTKParser parser = new ChordHTKParser(outFilePath, recognizedFolder);
+//        parser.run();
+
+        if(Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT)){
+            ChordHTKParserPerBeat parser = new ChordHTKParserPerBeat(outFilePath, recognizedFolder);
+            parser.run();
+        } else{
+            ChordHTKParser parser = new ChordHTKParser(outFilePath, recognizedFolder);
+            parser.run();
+        }
+
+//        HTKResultsParser.parse(outFilePath, recognizedFolder);
 //        EvaluatorOld evaluator = new EvaluatorOld();
 //        evaluator.evaluate(recognizedFolder, Settings.labelsGroundTruthDir, recognizedFolder + ".txt");
     }

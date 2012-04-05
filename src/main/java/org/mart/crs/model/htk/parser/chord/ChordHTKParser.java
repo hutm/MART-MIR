@@ -21,6 +21,7 @@ import org.mart.crs.config.Extensions;
 import org.mart.crs.config.Settings;
 import org.mart.crs.logging.CRSLogger;
 import org.mart.crs.management.beat.BeatStructure;
+import org.mart.crs.management.beat.segment.BeatSegment;
 import org.mart.crs.management.features.FeaturesManager;
 import org.mart.crs.management.label.LabelsSource;
 import org.mart.crs.management.label.chord.ChordSegment;
@@ -132,11 +133,20 @@ public class ChordHTKParser {
 
 
     protected void assignBeatTimings() {
+        assignBeatTimings(results);
+    }
+
+    protected static void assignBeatTimings(ArrayList<ChordStructure> results) {
         Collections.sort(results);
         LabelsSource beatLabelsSource = new LabelsSource(Settings.beatLabelsGroundTruthDir, true, "beatGT", Extensions.BEAT_EXTENSIONS);
 
         for (ChordStructure cs : results) {
             BeatStructure beatStructure = BeatStructure.getBeatStructure(beatLabelsSource.getFilePathForSong(cs.getSongName()));
+
+            List<BeatSegment> segments = beatStructure.getBeatSegments();
+            segments.add(new BeatSegment(0, 0));
+            beatStructure = new BeatStructure(segments, beatStructure.getSongName());
+
             double[] beats;
             if (FeaturesManager.downbeatGranulation) {
                 beats = beatStructure.getDownBeats();
@@ -150,7 +160,7 @@ public class ChordHTKParser {
                 if ( i + 1 < cs.getChordSegments().size()) {
                     chordSegment.setOffset(beats[i+1]);
                 } else{
-                    chordSegment.setOffset(beats[i] + beats[i] - beats[i-1]);
+                    chordSegment.setOffset(beats[i] + 2 * (beats[i] - beats[i-1]));
                 }
             }
         }

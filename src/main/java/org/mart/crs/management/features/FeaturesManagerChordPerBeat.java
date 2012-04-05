@@ -59,6 +59,10 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
 
         String beatFilePath = beatLabelsSource.getFilePathForSong(songFilePath);
         BeatStructure beatStructure = BeatStructure.getBeatStructure(beatFilePath);
+        List<BeatSegment> segments = beatStructure.getBeatSegments();
+        segments.add(new BeatSegment(0, 0));
+        segments.add(new BeatSegment(songDuration, 0));
+        beatStructure = new BeatStructure(segments, beatStructure.getSongName());
 
         List<float[][]> features = new ArrayList<float[][]>();
         for (FeaturesExtractorHTK featuresExtractor : featureExtractorToWorkWith) {
@@ -93,12 +97,20 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
         ChordStructure chordStructure = new ChordStructure(chordFilePath);
         BeatStructure beatStructure = BeatStructure.getBeatStructure(beatFilePath);
 
+        List<BeatSegment> segments = beatStructure.getBeatSegments();
+        segments.add(new BeatSegment(0, 0));
+        segments.add(new BeatSegment(songDuration, 0));
+        beatStructure = new BeatStructure(segments, beatStructure.getSongName());
+
         if (chordFilePath == null || beatFilePath == null) {
             logger.warn(String.format("Could not find labels for song %s", songFilePath));
             return;
         }
 
         for (BeatSegment beatSegment : beatStructure.getBeatSegments()) {
+            if(beatSegment.getTimeInstant() == beatSegment.getNextBeatTimeInstant()){
+                continue;
+            }
             ChordSegment tempSegmentWithBeatDuration = new ChordSegment(beatSegment.getTimeInstant(), beatSegment.getNextBeatTimeInstant(), ChordType.NOT_A_CHORD.getName());
             TreeMap<Float, ChordSegment> intersectionchords = new TreeMap<Float, ChordSegment>();
             for (ChordSegment chordSegment : chordStructure.getChordSegments()) {
@@ -106,7 +118,12 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
                     intersectionchords.put(chordSegment.getIntersection(tempSegmentWithBeatDuration), chordSegment);
                 }
             }
-            ChordSegment curSegment = intersectionchords.lastEntry().getValue();
+            ChordSegment curSegment = null;
+            try {
+                curSegment = intersectionchords.lastEntry().getValue();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
             // Now copypast from FeaturesManager
@@ -132,10 +149,9 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
                 double endTime = curSegment.getOffset();
 
 
-                List<float[][]> features;
+                List<float[][]> features = new ArrayList<float[][]>();
                 String fileNameToStore;
                 if (!(curSegment.getChordType() == ChordType.NOT_A_CHORD || isToSaveRotatedFeatures())) {
-                    features = new ArrayList<float[][]>();
                     for (FeaturesExtractorHTK featuresExtractor : featureExtractorToWorkWith) {
                         float[][] feature = featuresExtractor.extractFeatures(startTime, endTime, refFrequency, curSegment.getRoot());
                         float[] averageValue = HelperArrays.average(feature, 0, feature.length);
@@ -161,7 +177,8 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
                         int newRootLabelIndex = HelperArrays.transformIntValueToBaseRange(-1 * rotation, Root.values().length);
                         for (FeaturesExtractorHTK featuresExtractor : featureExtractorToWorkWith) {
                             float[][] feature = featuresExtractor.extractFeatures(startTime, endTime, refFrequency, Root.values()[newRootIndex]);
-                            features.add(feature);
+                            float[] averageValue = HelperArrays.average(feature, 0, feature.length);
+                            features.add(new float[][]{averageValue});
                         }
 
                         String filePath;

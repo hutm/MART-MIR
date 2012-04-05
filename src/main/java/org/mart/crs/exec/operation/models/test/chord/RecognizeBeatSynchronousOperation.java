@@ -77,8 +77,8 @@ public class RecognizeBeatSynchronousOperation extends RecognizeOperation {
         parserTemp.run();
 
         //Evaluate intermediate results
-        EvaluatorOld evaluator = new EvaluatorOld();
-        evaluator.evaluate(recognizedFolder, Settings.chordLabelsGroundTruthDir, recognizedFolder + ".txt");
+//        EvaluatorOld evaluator = new EvaluatorOld();
+//        evaluator.evaluate(recognizedFolder, Settings.chordLabelsGroundTruthDir, recognizedFolder + ".txt");
 
 
         ChordHTKParser parser = new ChordHTKParserHypotheses(outFilePath, recognizedFolder);
