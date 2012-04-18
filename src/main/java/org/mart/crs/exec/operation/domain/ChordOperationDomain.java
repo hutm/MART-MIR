@@ -22,15 +22,14 @@ import org.mart.crs.config.Settings;
 import org.mart.crs.exec.operation.eval.AbstractCRSEvaluator;
 import org.mart.crs.exec.operation.eval.chord.ChordEvaluator;
 import org.mart.crs.exec.operation.eval.chord.ChordEvaluatorNema;
-import org.mart.crs.exec.operation.eval.chord.ChordEvaluatorNemaFullDictionary;
 import org.mart.crs.exec.operation.models.test.chord.RecognizeBeatSynchronousOperation;
 import org.mart.crs.exec.operation.models.test.chord.RecognizeConventionalVersionWithLMOperation;
 import org.mart.crs.exec.operation.models.test.chord.RecognizeOperation;
 import org.mart.crs.exec.operation.models.training.chord.TrainingLanguageModelsOperation;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.logging.CRSLogger;
-import org.mart.crs.management.features.FeaturesManager;
-import org.mart.crs.management.features.FeaturesManagerSphinx;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
+import org.mart.crs.management.features.manager.FeaturesManagerSphinx;
 import org.mart.crs.management.label.LabelsParser;
 import org.mart.crs.management.label.chord.ChordType;
 import org.mart.crs.management.label.chord.Root;
@@ -140,8 +139,8 @@ public class ChordOperationDomain extends OperationDomain {
     @Override
     public List<AbstractCRSEvaluator> getEvaluators() {
         List<AbstractCRSEvaluator> outList = new ArrayList<AbstractCRSEvaluator>();
-        outList.add(new ChordEvaluator());
-//        outList.add(new ChordEvaluatorNema());                   //TODO for more detailed evaluation metrics
+//        outList.add(new ChordEvaluator());
+        outList.add(new ChordEvaluatorNema());
 //        outList.add(new ChordEvaluatorNemaFullDictionary());
         return outList;
     }
@@ -166,11 +165,11 @@ public class ChordOperationDomain extends OperationDomain {
     }
 
     @Override
-    public FeaturesManager getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
+    public FeaturesManagerChord getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
         if (isSphinx) {
             return new FeaturesManagerSphinx(songFilePath, outDirPath, isForTraining, execParams);
         }
-        return new FeaturesManager(songFilePath, outDirPath, isForTraining, execParams);
+        return new FeaturesManagerChord(songFilePath, outDirPath, isForTraining, execParams);
     }
 }
 

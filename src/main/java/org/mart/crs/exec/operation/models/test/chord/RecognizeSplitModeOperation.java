@@ -18,21 +18,30 @@ package org.mart.crs.exec.operation.models.test.chord;
 
 import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Extensions;
+import org.mart.crs.config.Settings;
+import org.mart.crs.exec.operation.eval.chord.EvaluatorOld;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.management.config.Configuration;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
+import org.mart.crs.management.features.manager.FeaturesManagerSmartLattice;
 import org.mart.crs.management.label.chord.ChordStructure;
+import org.mart.crs.management.label.lattice.Lattice;
 import org.mart.crs.model.htk.HTKResultsParser;
 import org.mart.crs.model.htk.parser.chord.ChordHTKParser;
 import org.mart.crs.utils.filefilter.ExtensionFileFilter;
 import org.mart.crs.utils.helper.Helper;
 import org.mart.crs.utils.helper.HelperFile;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import static org.mart.crs.config.Settings.EXECUTABLE_EXTENSION;
 import static org.mart.crs.exec.scenario.stage.StageParameters.*;
+import static org.mart.crs.utils.helper.HelperFile.createFileList;
+
 /**
  * @version 1.0 11-Jun-2010 17:46:16
  * @author: Hut
@@ -60,7 +69,7 @@ public class RecognizeSplitModeOperation extends RecognizeOperation {
 
 
         String featuresFolderFilePath = extractedFeaturesDir;
-        FeaturesManager.splitAllData(featuresFolderFilePath, recognizedFolder);
+        FeaturesManagerSmartLattice.splitAllData(featuresFolderFilePath, recognizedFolder);
 
         //Now generate N-Best lists for all splited segments
         HelperFile.createFileList(featuresFolderFilePath, featureFileListTest, new ExtensionFileFilter(new String[]{Extensions.CHROMA_SEC_PASS_EXT}), true);
@@ -95,11 +104,10 @@ public class RecognizeSplitModeOperation extends RecognizeOperation {
         }
 
 
-        /*
         Lattice aLattice;
         for (ChordStructure song : songList) {
             aLattice = new Lattice(song);
-            aLattice.storeInFile();
+            aLattice.storeInFile(String.format("%s/%s%s", extractedFeaturesDir, song.getSongName(), Extensions.LATTICE_SEC_PASS_EXT));
         }
 
 
@@ -114,7 +122,7 @@ public class RecognizeSplitModeOperation extends RecognizeOperation {
 
         //Creating list of lattices
         String fileList = tempDirPath + File.separator + "latticeList2ndPass";
-        createFileList(extractedFeaturesDir, fileList, new ExtensionFileFilter(new String[]{LATTICE_SEC_PASS_EXT}), false);
+        createFileList(extractedFeaturesDir, fileList, new ExtensionFileFilter(Extensions.LATTICE_SEC_PASS_EXT), false);
         List<String> latticeFilePathList = HelperFile.readTokensFromTextFile(fileList, 1);
 
         //Assign Factored Language Model Weights
@@ -124,15 +132,8 @@ public class RecognizeSplitModeOperation extends RecognizeOperation {
         for (String inLattice : latticeFilePathList) {
             outLattice = inLattice + "_";
             logger.debug("processing lattice " + inLattice);
-            if (IS_FACTORED_LM) {
-                command = binariesDir + "/lattice-tool" + EXECUTABLE_EXTENSION + " -debug 0 -in-lattice " + inLattice + " -out-lattice " + outLattice + " -read-htk -write-htk -factored -lm " + lmDir + File.separator + LMSpecFactoredFileName + " -htk-logbase 2.71828 -no-nulls -no-htk-nulls -order " + execParams.latticeRescoringOrder;
-            } else {
-                if (IS_FACTORED_LM_FOR_STANDARD_VERSION) {
-                    command = binariesDir + "/lattice-tool" + EXECUTABLE_EXTENSION + " -debug 0 -in-lattice " + inLattice + " -out-lattice " + outLattice + " -read-htk -write-htk -factored -lm " + lmDir + File.separator + LMSpecFileName + " -htk-logbase 2.71828 -no-nulls -no-htk-nulls -order " + execParams.latticeRescoringOrder;
-                } else {
-                    command = binariesDir + "/lattice-tool" + EXECUTABLE_EXTENSION + " -debug 0 -in-lattice " + inLattice + " -out-lattice " + outLattice + " -read-htk -write-htk -lm " + lmDir + File.separator + LMModelStandardVersion + " -htk-logbase 2.71828 -no-nulls -no-htk-nulls -order " + execParams.latticeRescoringOrder;
-                }
-            }
+
+            command = binariesDir + "/lattice-tool" + EXECUTABLE_EXTENSION + " -debug 0 -in-lattice " + inLattice + " -out-lattice " + outLattice + " -read-htk -write-htk -lm " + lmDir + File.separator + LMModelStandardVersion + " -htk-logbase 2.71828 -no-nulls -no-htk-nulls -order " + execParams.latticeRescoringOrder;
             Helper.execCmd(command);
 
             oldLattice = HelperFile.getFile(inLattice);
@@ -160,7 +161,7 @@ public class RecognizeSplitModeOperation extends RecognizeOperation {
                     logger.info("--------------------------------------------------");
 
                     //TODO refactor
-                    String resultsDirName = "results2ndPass_" + "l_" + lmWeight + "_a_" + acWeight + "_w_" + wip + "_factored_" + IS_FACTORED_LM;
+                    String resultsDirName = "results2ndPass_" + "l_" + lmWeight + "_a_" + acWeight + "_w_" + wip;
                     recognizedFolder = resultsDir + File.separator + resultsDirName;
 //                    LabelsManager.recognizedFolder_compare = recognizedFolder; //This is done in order to estimate the advantages of LM
                     String outRescoredFile = tempDirPath + File.separator + "out_" + resultsDirName;
@@ -181,7 +182,6 @@ public class RecognizeSplitModeOperation extends RecognizeOperation {
                 }
             }
         }
-        */
     }
 
 

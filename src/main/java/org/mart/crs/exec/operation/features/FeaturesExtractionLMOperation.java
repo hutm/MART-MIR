@@ -39,7 +39,7 @@ public class FeaturesExtractionLMOperation extends FeaturesExtractionOperation {
 //import SpectrumImpl;
 //import HTKResultsParser;
 //import FeatureVector;
-//import FeaturesManager;
+//import FeaturesManagerChord;
 //import org.mart.crs.hmm.HTK.execute.CRSExecSettings;
 //import ChordSegment;
 //import KeyManager;
@@ -138,7 +138,7 @@ public class FeaturesExtractionLMOperation extends FeaturesExtractionOperation {
 //                        // Now rotate pcpList to C or Cm
 //                        pcpChord = PCP.rotatePCP(pcpChord, chordSegment.getChordName(), LabelsParser.TONE_NAMES[0]);
 //                        fileNameToStore = new StringBuilder().append(dirName).append(File.separator).append(filename).toString();
-//                        FeaturesManager.storeDataInHTKFormat(fileNameToStore, new FeatureVector(pcpChord, chrSamplingRate));
+//                        FeaturesManagerChord.storeDataInHTKFormat(fileNameToStore, new FeatureVector(pcpChord, chrSamplingRate));
 //                    }
 //                    currentIndexInPCP += duration;
 //
@@ -160,7 +160,7 @@ public class FeaturesExtractionLMOperation extends FeaturesExtractionOperation {
 //            }
 //
 //
-//            FeaturesManager.storeDataInHTKFormat(fileNameToStore, new FeatureVector(pcpForStore, chrSamplingRate));
+//            FeaturesManagerChord.storeDataInHTKFormat(fileNameToStore, new FeatureVector(pcpForStore, chrSamplingRate));
 //        }
 //
 //

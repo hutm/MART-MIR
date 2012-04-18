@@ -20,7 +20,8 @@ import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Extensions;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.management.config.Configuration;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
+import org.mart.crs.management.features.manager.FeaturesManagerSmartLattice;
 import org.mart.crs.management.label.chord.ChordStructure;
 import org.mart.crs.model.htk.HTKResultsParser;
 import org.mart.crs.utils.filefilter.ExtensionFileFilter;
@@ -49,10 +50,8 @@ public class RecognizeFinalStepOperation extends RecognizeOperation {
      * At first the song is segmented, then viterbi decoder is applied for each segment
      */
     public void operate(String recognizedFolder) {
-
-
         String featuresFolderFilePath = extractedFeaturesDir;
-        FeaturesManager.splitAllData(featuresFolderFilePath, recognizedFolder);
+        FeaturesManagerSmartLattice.splitAllData(featuresFolderFilePath, recognizedFolder);
 
         //Now generate N-Best lists for all splited segments
         createFileList(featuresFolderFilePath, featureFileListTest, new ExtensionFileFilter(new String[]{Extensions.CHROMA_SEC_PASS_EXT}), true);
@@ -85,7 +84,6 @@ public class RecognizeFinalStepOperation extends RecognizeOperation {
             ChordStructure finalChordStructure = chordStructure.getFinalChords();
             finalChordStructure.saveSegmentsInFile(outFolder);
         }
-
     }
 
 }

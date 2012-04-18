@@ -16,9 +16,11 @@
 
 package org.mart.crs.model.htk.parser.chord;
 
+import org.mart.crs.config.Extensions;
 import org.mart.crs.management.label.chord.ChordSegment;
 import org.mart.crs.management.label.chord.ChordStructure;
 import org.mart.crs.utils.helper.Helper;
+import org.mart.crs.utils.helper.HelperFile;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -28,12 +30,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import static org.mart.crs.utils.helper.HelperFile.getFile;
+
 /**
  * @version 1.0 5/18/11 4:18 PM
  * @author: Hut
  */
-public class ChordHTKParserHypotheses extends ChordHTKParser {
-    public ChordHTKParserHypotheses(String htkOutFilePath, String parsedLabelsDir) {
+public class ChordHTKParserSegmentBasedHypotheses extends ChordHTKParser {
+    public ChordHTKParserSegmentBasedHypotheses(String htkOutFilePath, String parsedLabelsDir) {
         super(htkOutFilePath, parsedLabelsDir);
     }
 
@@ -86,10 +90,8 @@ public class ChordHTKParserHypotheses extends ChordHTKParser {
 
                     if (chordSegment == null) {
                         chordSegment = new ChordSegment(startTimeSegment, endTimeSegment, chordName, logliklihood);
-                        chordSegment.addHypothesis(new ChordSegment(startTimeSegment, endTimeSegment, chordName, logliklihood));
-                    } else {
-                        chordSegment.addHypothesis(new ChordSegment(startTimeSegment, endTimeSegment, chordName, logliklihood));
                     }
+                    chordSegment.addHypothesis(new ChordSegment(startTimeSegment, endTimeSegment, chordName, logliklihood));
                 }
                 chordStructure.getChordSegments().add(chordSegment);
             }
@@ -105,5 +107,15 @@ public class ChordHTKParserHypotheses extends ChordHTKParser {
         }
     }
 
+    @Override
+    public void storeResults() {
+        //First create outDir
+        logger.info("Storing data into folder " + parsedLabelsDir);
+        (getFile(parsedLabelsDir)).mkdirs();
 
+        for (ChordStructure chordStructure : results) {
+            String outFile = String.format("%s/%s%s", parsedLabelsDir, chordStructure.getSongName(), Extensions.LABEL_EXT);
+            chordStructure.saveHypothesesInFile(outFile);
+        }
+    }
 }

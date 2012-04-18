@@ -17,8 +17,8 @@
 package org.mart.crs.exec.operation.domain;
 
 import org.mart.crs.config.ExecParams;
-import org.mart.crs.management.features.FeaturesManager;
-import org.mart.crs.management.features.FeaturesManagerChordFullTraining;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
+import org.mart.crs.management.features.manager.FeaturesManagerChordFullTraining;
 import org.mart.crs.management.label.chord.ChordType;
 import org.mart.crs.management.label.chord.Root;
 import org.mart.crs.utils.helper.Helper;
@@ -143,7 +143,7 @@ public class ChordFullTrainingOperationDomain extends ChordOperationDomain {
 
 
     @Override
-    public FeaturesManager getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
+    public FeaturesManagerChord getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
         return new FeaturesManagerChordFullTraining(songFilePath, outDirPath, isForTraining, execParams);
     }
 

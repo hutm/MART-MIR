@@ -14,9 +14,10 @@
  * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.mart.crs.management.features;
+package org.mart.crs.management.features.manager;
 
 import org.mart.crs.config.ExecParams;
+import org.mart.crs.management.features.FeatureVector;
 import org.mart.crs.utils.helper.Helper;
 
 import java.io.DataOutputStream;
@@ -29,7 +30,7 @@ import java.util.List;
  * @version 1.0 2/23/12 2:37 PM
  * @author: Hut
  */
-public class FeaturesManagerSphinx extends FeaturesManager {
+public class FeaturesManagerSphinx extends FeaturesManagerChord {
 
     public FeaturesManagerSphinx(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
         super(songFilePath, outDirPath, isForTraining, execParams);

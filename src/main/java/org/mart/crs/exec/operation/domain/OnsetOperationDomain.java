@@ -25,8 +25,8 @@ import org.mart.crs.exec.operation.models.test.onset.RecognizeOnsetOperation;
 import org.mart.crs.exec.operation.models.training.onset.TrainingOnsetLanguageModelsOperation;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.logging.CRSLogger;
-import org.mart.crs.management.features.FeaturesManager;
-import org.mart.crs.management.features.FeaturesManagerOnset;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
+import org.mart.crs.management.features.manager.FeaturesManagerOnset;
 import org.mart.crs.management.label.LabelsParser;
 import org.mart.crs.utils.helper.Helper;
 import org.mart.crs.utils.helper.HelperFile;
@@ -153,7 +153,7 @@ public class OnsetOperationDomain extends OperationDomain {
     }
 
     @Override
-    public FeaturesManager getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
+    public FeaturesManagerChord getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
         return new FeaturesManagerOnset(songFilePath, outDirPath, isForTraining, execParams);
     }
 }

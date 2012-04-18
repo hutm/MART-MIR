@@ -19,7 +19,7 @@ package org.mart.crs.management.features.extractor;
 import org.mart.crs.config.ExecParams;
 import org.mart.crs.core.AudioReader;
 import org.mart.crs.core.pcp.PCP;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
 import org.mart.crs.management.label.chord.Root;
 import org.mart.crs.utils.helper.HelperArrays;
 
@@ -104,11 +104,17 @@ public abstract class FeaturesExtractorHTK {
     protected List<float[][]> extractTimeSegmentFromGlobalVector(List<float[][]> globalVector, double startTime, double endTime) {
         List<float[][]> outList = new ArrayList<float[][]>();
 
-        int startIndex = FeaturesManager.getIndexForTimeInstant(startTime, execParams);
-        int endIndex = FeaturesManager.getIndexForTimeInstant(endTime, execParams);
+        int startIndex = FeaturesManagerChord.getIndexForTimeInstant(startTime, execParams);
+        int endIndex = FeaturesManagerChord.getIndexForTimeInstant(endTime, execParams);
+//        if (startIndex >= globalVector.get(0).length) {
+//            startIndex = globalVector.get(0).length - 2;
+//        }
         if (endIndex >= globalVector.get(0).length) {
             endIndex = globalVector.get(0).length - 1;
         }
+//        if(startIndex == endIndex){
+//            endIndex ++;
+//        }
 
         for (float[][] aGlobalVector : globalVectors) {
             if (startIndex >= endIndex) {

@@ -41,7 +41,7 @@ public class BatchScenario {
 //                                String _workingDir = String.format("%s_%s_%s_%d_%d_%3.2f", Settings._workingDir.replace("*", String.valueOf(_foldNumber)),
 //                                        isEnergySpectrum, isToNormalizeFeatureVectors, winType, winLength, overlapping);
 //
-//                                FeaturesManager.reinitializeFeaturesManager();
+//                                FeaturesManagerChord.reinitializeFeaturesManager();
 //                                runTrainingStage(scenario, _workingDir);
 //
 //                                runTestStage(scenario, _workingDir);

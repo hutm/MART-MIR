@@ -26,8 +26,8 @@ import org.mart.crs.exec.operation.models.test.beat.RecognizeBeatOperation;
 import org.mart.crs.exec.operation.models.training.beat.TrainingBeatLanguageModelsOperation;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.logging.CRSLogger;
-import org.mart.crs.management.features.FeaturesManager;
-import org.mart.crs.management.features.FeaturesManagerBeat;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
+import org.mart.crs.management.features.manager.FeaturesManagerBeat;
 import org.mart.crs.utils.helper.Helper;
 import org.mart.crs.utils.helper.HelperFile;
 
@@ -196,7 +196,7 @@ public class BeatOperationDomain extends OperationDomain {
     }
 
     @Override
-    public FeaturesManager getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
+    public FeaturesManagerChord getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
         return new FeaturesManagerBeat(songFilePath, outDirPath, isForTraining, execParams);
     }
 }

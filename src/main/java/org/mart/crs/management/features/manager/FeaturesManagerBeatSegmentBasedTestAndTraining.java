@@ -14,16 +14,15 @@
  * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.mart.crs.management.features;
+package org.mart.crs.management.features.manager;
 
 import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Extensions;
-import org.mart.crs.config.Settings;
 import org.mart.crs.management.beat.BeatStructure;
 import org.mart.crs.management.beat.segment.BeatSegment;
 import org.mart.crs.management.config.Configuration;
+import org.mart.crs.management.features.FeatureVector;
 import org.mart.crs.management.features.extractor.FeaturesExtractorHTK;
-import org.mart.crs.management.label.LabelsSource;
 import org.mart.crs.management.label.chord.ChordSegment;
 import org.mart.crs.management.label.chord.ChordStructure;
 import org.mart.crs.management.label.chord.ChordType;
@@ -35,56 +34,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 
-import static org.mart.crs.management.label.chord.ChordType.isToUseChordWrappersToTrainChordChildren;
-
 /**
- * @version 1.0 4/4/12 12:33 AM
+ * @version 1.0 4/16/12 2:56 PM
  * @author: Hut
  */
-public class FeaturesManagerChordPerBeat extends FeaturesManager {
+public class FeaturesManagerBeatSegmentBasedTestAndTraining extends FeaturesManagerBeatSegmentBasedTest {
 
 
-    protected LabelsSource chordLabelSource;
-    protected LabelsSource beatLabelsSource;
-
-    public FeaturesManagerChordPerBeat(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
+    public FeaturesManagerBeatSegmentBasedTestAndTraining(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
         super(songFilePath, outDirPath, isForTraining, execParams);
-        this.beatLabelsSource = new LabelsSource(Settings.beatLabelsGroundTruthDir, true, "beatGT", Extensions.BEAT_EXTENSIONS);
-        this.chordLabelSource = new LabelsSource(Settings.chordLabelsGroundTruthDir, true, "chordGT", Extensions.LABEL_EXT);
-    }
-
-
-    @Override
-    public FeatureVector extractFeatureVectorForTest(float refFrequency) {
-
-        String beatFilePath = beatLabelsSource.getFilePathForSong(songFilePath);
-        BeatStructure beatStructure = BeatStructure.getBeatStructure(beatFilePath);
-        List<BeatSegment> segments = beatStructure.getBeatSegments();
-        segments.add(new BeatSegment(0, 0));
-        segments.add(new BeatSegment(songDuration, 0));
-        beatStructure = new BeatStructure(segments, beatStructure.getSongName());
-
-        List<float[][]> features = new ArrayList<float[][]>();
-        for (FeaturesExtractorHTK featuresExtractor : featureExtractorToWorkWith) {
-            List<float[]> outFeatures = new ArrayList<float[]>();
-            for(int i = 0; i < beatStructure.getBeats().length - 1; i++){
-                BeatSegment beatSegment = beatStructure.getBeatSegments().get(i);
-                BeatSegment nextBeatSegment = beatStructure.getBeatSegments().get(i+1);
-
-                float[][] feature = featuresExtractor.extractFeatures(beatSegment.getTimeInstant(), nextBeatSegment.getTimeInstant(), refFrequency, Root.C);
-                float[] averageValue = HelperArrays.average(feature, 0, feature.length);
-                outFeatures.add(averageValue);
-            }
-            float[][] out = new float[outFeatures.size()][];
-            for(int i = 0; i < out.length; i++){
-                out[i] = outFeatures.get(i);
-            }
-            features.add(out);
-        }
-
-        FeatureVector outFeatureVector = new FeatureVector(features, chrSamplingPeriod);
-        outFeatureVector.setDuration(this.songDuration);
-        return outFeatureVector;
     }
 
 
@@ -97,10 +55,7 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
         ChordStructure chordStructure = new ChordStructure(chordFilePath);
         BeatStructure beatStructure = BeatStructure.getBeatStructure(beatFilePath);
 
-        List<BeatSegment> segments = beatStructure.getBeatSegments();
-        segments.add(new BeatSegment(0, 0));
-        segments.add(new BeatSegment(songDuration, 0));
-        beatStructure = new BeatStructure(segments, beatStructure.getSongName());
+        beatStructure.addTrailingBeats(songDuration);
 
         if (chordFilePath == null || beatFilePath == null) {
             logger.warn(String.format("Could not find labels for song %s", songFilePath));
@@ -108,7 +63,7 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
         }
 
         for (BeatSegment beatSegment : beatStructure.getBeatSegments()) {
-            if(beatSegment.getTimeInstant() == beatSegment.getNextBeatTimeInstant()){
+            if (beatSegment.getTimeInstant() == beatSegment.getNextBeatTimeInstant()) {
                 continue;
             }
             ChordSegment tempSegmentWithBeatDuration = new ChordSegment(beatSegment.getTimeInstant(), beatSegment.getNextBeatTimeInstant(), ChordType.NOT_A_CHORD.getName());
@@ -126,12 +81,12 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
             }
 
 
-            // Now copypast from FeaturesManager
+            // Now copypast from FeaturesManagerChord
             if (!(curSegment.getChordType()).equals(ChordType.UNKNOWN_CHORD)) {
 
 
                 //Skip unnecessary chord segments
-                if (isToUseChordWrappersToTrainChordChildren) {
+                if (ChordType.isToUseChordWrappersToTrainChordChildren) {
                     //In the current configuration all "wrapper"  chords are used to trained their reduced versions
                     if (!Arrays.asList(Configuration.chordDictionary).contains(curSegment.getChordType().getName())) {
                         continue;
@@ -144,9 +99,9 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
                 }
 
 
-                String filename = String.format("%5.3f_%5.3f_%s%s", curSegment.getOnset(), curSegment.getOffset(), curSegment.getChordType().getName(), Extensions.CHROMA_EXT);
-                double startTime = curSegment.getOnset();
-                double endTime = curSegment.getOffset();
+                double startTime = beatSegment.getTimeInstant();
+                double endTime = beatSegment.getNextBeatTimeInstant();
+                String filename = String.format("%5.3f_%5.3f_%s%s", startTime, endTime, curSegment.getChordType().getName(), Extensions.CHROMA_EXT);
 
 
                 List<float[][]> features = new ArrayList<float[][]>();
@@ -154,17 +109,13 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
                 if (!(curSegment.getChordType() == ChordType.NOT_A_CHORD || isToSaveRotatedFeatures())) {
                     for (FeaturesExtractorHTK featuresExtractor : featureExtractorToWorkWith) {
                         float[][] feature = featuresExtractor.extractFeatures(startTime, endTime, refFrequency, curSegment.getRoot());
-                        float[] averageValue = HelperArrays.average(feature, 0, feature.length);
-                        features.add(new float[][]{averageValue});
+                        features.add(feature);
                     }
 
                     fileNameToStore = String.format("%s/%s", dirName, filename);
-                    storeDataInHTKFormat(fileNameToStore, new FeatureVector(features, chrSamplingPeriod));
-                }
-
-
-                //For NOT_A_CHORD add all possible rotations of chroma
-                if (curSegment.getChordType() == ChordType.NOT_A_CHORD || isToSaveRotatedFeatures()) {
+                    FeatureVector vector = new FeatureVector(features, chrSamplingPeriod);
+                    vector.storeDataInHTKFormat(fileNameToStore);
+                } else {
                     String chordTypeName = curSegment.getChordType().getName();
                     for (int rotation = 0; rotation < ChordSegment.SEMITONE_NUMBER; rotation++) {
                         features = new ArrayList<float[][]>();
@@ -177,8 +128,7 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
                         int newRootLabelIndex = HelperArrays.transformIntValueToBaseRange(-1 * rotation, Root.values().length);
                         for (FeaturesExtractorHTK featuresExtractor : featureExtractorToWorkWith) {
                             float[][] feature = featuresExtractor.extractFeatures(startTime, endTime, refFrequency, Root.values()[newRootIndex]);
-                            float[] averageValue = HelperArrays.average(feature, 0, feature.length);
-                            features.add(new float[][]{averageValue});
+                            features.add(feature);
                         }
 
                         String filePath;
@@ -190,14 +140,11 @@ public class FeaturesManagerChordPerBeat extends FeaturesManager {
                         }
 
                         fileNameToStore = String.format("%s/%s", dirName, filePath);
-                        storeDataInHTKFormat(fileNameToStore, new FeatureVector(features, chrSamplingPeriod));
+                        FeatureVector vector = new FeatureVector(features, chrSamplingPeriod);
+                        vector.storeDataInHTKFormat(fileNameToStore);
                     }
                 }
-
-
             }
-
-
         }
     }
 }

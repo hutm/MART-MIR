@@ -51,6 +51,8 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
 
     protected static Logger logger = CRSLogger.getLogger(ChordEvaluator.class);
 
+    public static final boolean NEMA_BASED_EVALUATION = true;
+
     public static final String CHORD_RECOGNITION_RATE_TIME_NAME = "CRRTime";
     public static final String CHORD_RECOGNITION_RATE_NAME = "CRR";
     public static final String FRAGMENTATION_NAME = "fragmentation";
@@ -121,10 +123,13 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
             if (GTFilePath == null) {
                 continue;
             }
-            chordList = (new ChordStructure(song.getAbsolutePath())).getChordSegments();
-            chordListGT = (new ChordStructure(GTFilePath)).getChordSegments();
-//            chordList = LabelsParser.getSegments(song.getAbsolutePath(), true);
-//            chordListGT = LabelsParser.getSegments(GTFilePath, true);
+            if (NEMA_BASED_EVALUATION) {
+                chordList = (new ChordStructure(song.getAbsolutePath())).getChordSegments();
+                chordListGT = (new ChordStructure(GTFilePath)).getChordSegments();
+            } else{
+                chordList = LabelsParser.getSegments(song.getAbsolutePath(), true);
+                chordListGT = LabelsParser.getSegments(GTFilePath, true);
+            }
             chordEvalResults.add(compareLabels(chordList, chordListGT, song.getName()));
         }
     }
@@ -142,7 +147,7 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
         double totalChordsTime = 0;
         double totalKnownChordsTime = 0;
         double correctTime = 0;
-        for (ChordSegment csGT : chordListGT) {
+        for (ChordSegment csGT : chordListGT) {   //TODO: needs very careful refactoring... the results are very different from ChordEvaluatiorNemaBased
             for (ChordSegment cs : chordList) {
                 if (cs.getOnset() < csGT.getOffset()) {
                     if (cs.getOffset() > csGT.getOnset()) {

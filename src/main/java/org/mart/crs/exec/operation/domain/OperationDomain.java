@@ -21,7 +21,7 @@ import org.mart.crs.config.ExecParams;
 import org.mart.crs.exec.operation.eval.AbstractCRSEvaluator;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.logging.CRSLogger;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
 import org.mart.crs.utils.helper.Helper;
 import org.mart.crs.utils.helper.HelperFile;
 
@@ -50,7 +50,8 @@ public abstract class OperationDomain {
         try {
             FileWriter fileWriter = new FileWriter(HelperFile.getFile(crsOperation.configPath));
             fileWriter.write("TARGETKIND = USER\n" +
-                    "NATURALREADORDER = TRUE \n");
+                    "NATURALREADORDER = TRUE \n" //+ "TRACE = 0004 \n"
+            );
             fileWriter.close();
         } catch (IOException e) {
             logger.error("Problems: ");
@@ -72,5 +73,5 @@ public abstract class OperationDomain {
 
     public abstract AbstractCRSOperation getTrainLanguageModelsOperation(StageParameters stageParameters, ExecParams execParams);
 
-    public abstract FeaturesManager getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams);
+    public abstract FeaturesManagerChord getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams);
 }

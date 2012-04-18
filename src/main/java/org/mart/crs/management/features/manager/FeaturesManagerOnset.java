@@ -14,7 +14,7 @@
  * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.mart.crs.management.features;
+package org.mart.crs.management.features.manager;
 
 import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Extensions;
@@ -22,6 +22,7 @@ import org.mart.crs.config.Settings;
 import org.mart.crs.management.beat.BeatStructure;
 import org.mart.crs.management.beat.segment.BeatSegment;
 import org.mart.crs.management.beat.segment.MeasureSegment;
+import org.mart.crs.management.features.FeatureVector;
 import org.mart.crs.management.features.extractor.FeaturesExtractorHTK;
 import org.mart.crs.management.label.chord.Root;
 import org.mart.crs.utils.helper.HelperFile;
@@ -36,7 +37,7 @@ import static org.mart.crs.config.Extensions.CHROMA_EXT;
  * @version 1.0 Dec 3, 2010 6:30:33 PM
  * @author: Hut
  */
-public class FeaturesManagerOnset extends FeaturesManager {
+public class FeaturesManagerOnset extends FeaturesManagerChord {
 
     public FeaturesManagerOnset(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
         super(songFilePath, outDirPath, isForTraining, execParams);
@@ -77,7 +78,8 @@ public class FeaturesManagerOnset extends FeaturesManager {
             }
 
             String fileNameToStore = new StringBuilder().append(dirName).append(File.separator).append(filename).toString();
-            storeDataInHTKFormat(fileNameToStore, new FeatureVector(features, chrSamplingPeriod));
+            FeatureVector vector = new FeatureVector(features, chrSamplingPeriod);
+            vector.storeDataInHTKFormat(fileNameToStore);
 
         }
     }
@@ -103,7 +105,8 @@ public class FeaturesManagerOnset extends FeaturesManager {
             }
 
             String fileNameToStore = new StringBuilder().append(dirName).append(File.separator).append(filename).toString();
-            storeDataInHTKFormat(fileNameToStore, new FeatureVector(features, chrSamplingPeriod));
+            FeatureVector vector = new FeatureVector(features, chrSamplingPeriod);
+            vector.storeDataInHTKFormat(fileNameToStore);
 
         }
     }
@@ -113,7 +116,7 @@ public class FeaturesManagerOnset extends FeaturesManager {
         FeatureVector featureVector = extractFeatureVectorForTest(refFrequency);
 
         String filenameToSave = new StringBuilder().append(dirName).append(File.separator).append(featureVector.getFileNameToStoreTestVersion()).toString();
-        storeDataInHTKFormat(filenameToSave, featureVector);
+        featureVector.storeDataInHTKFormat(filenameToSave);
     }
 
 

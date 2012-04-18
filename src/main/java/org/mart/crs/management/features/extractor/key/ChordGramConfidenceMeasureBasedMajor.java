@@ -18,7 +18,7 @@ package org.mart.crs.management.features.extractor.key;
 
 import org.mart.crs.config.Extensions;
 import org.mart.crs.config.Settings;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
 import org.mart.crs.management.features.extractor.FeaturesExtractorHTK;
 import org.mart.crs.management.label.chord.ChordSegment;
 import org.mart.crs.management.label.chord.ChordStructure;
@@ -39,11 +39,11 @@ public class ChordGramConfidenceMeasureBasedMajor extends FeaturesExtractorHTK {
         String chordGramFilePath = HelperFile.getPathForFileWithTheSameName(this.songFilePath, Settings.chordRecognizedDirectory, Extensions.CHROMA_EXT);
         ChordStructure chordStructure = ChordStructure.readHypothesesFromFile(chordGramFilePath);
         List<ChordSegment> chordSegments = chordStructure.getChordSegments();
-        int endIndexGlobal = FeaturesManager.getIndexForTimeInstant(chordSegments.get(chordSegments.size() - 1).getOffset(), execParams);
+        int endIndexGlobal = FeaturesManagerChord.getIndexForTimeInstant(chordSegments.get(chordSegments.size() - 1).getOffset(), execParams);
         float[][] chordGram = new float[endIndexGlobal][ChordSegment.SEMITONE_NUMBER];
         for (ChordSegment cs : chordSegments) {
-            int startIndex = FeaturesManager.getIndexForTimeInstant(cs.getOnset(), execParams);
-            int endIndex = FeaturesManager.getIndexForTimeInstant(cs.getOffset(), execParams);
+            int startIndex = FeaturesManagerChord.getIndexForTimeInstant(cs.getOnset(), execParams);
+            int endIndex = FeaturesManagerChord.getIndexForTimeInstant(cs.getOffset(), execParams);
             float[] chordGramData = extractModalityData(cs.getChordGram());
             for(int i = startIndex; i < endIndex; i++){
                 for(int j = 0; j < chordGramData.length; j++){

@@ -19,7 +19,7 @@ package org.mart.crs.exec.operation.features;
 import org.mart.crs.config.Extensions;
 import org.mart.crs.exec.operation.Operation;
 import org.mart.crs.management.features.FeatureVector;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
 import org.mart.crs.utils.filefilter.ExtensionFileFilter;
 import org.mart.crs.utils.helper.HelperArrays;
 
@@ -50,7 +50,7 @@ public class CalculateMeanAndStandardDeviationOfChroma extends Operation {
         File[] fileList = (new File(workingDir)).listFiles(new ExtensionFileFilter(Extensions.CHROMA_EXT));
         List<float[][]> features = new ArrayList<float[][]>();
         for(File aFile:fileList){
-            FeatureVector featureVector = FeaturesManager.readFeatureVector(aFile.getPath());
+            FeatureVector featureVector = FeatureVector.readFeatureVector(aFile.getPath());
             features.add(featureVector.getVectors().get(0));
         }
 

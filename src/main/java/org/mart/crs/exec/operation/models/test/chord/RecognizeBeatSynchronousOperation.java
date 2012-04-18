@@ -18,9 +18,7 @@ package org.mart.crs.exec.operation.models.test.chord;
 
 import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Extensions;
-import org.mart.crs.config.Settings;
 import org.mart.crs.exec.operation.domain.ChordSmartLatticeDomain;
-import org.mart.crs.exec.operation.eval.chord.EvaluatorOld;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.management.config.Configuration;
 import org.mart.crs.management.label.chord.ChordStructure;
@@ -28,7 +26,7 @@ import org.mart.crs.management.label.lattice.Lattice;
 import org.mart.crs.model.htk.parser.chord.ChordHTKParser;
 import org.mart.crs.model.htk.parser.chord.ChordHTKParserBeatSynchronous;
 import org.mart.crs.model.htk.parser.chord.ChordHTKParserFromLatticeBeatSynchronous;
-import org.mart.crs.model.htk.parser.chord.ChordHTKParserHypotheses;
+import org.mart.crs.model.htk.parser.chord.ChordHTKParserSegmentBasedHypotheses;
 import org.mart.crs.utils.filefilter.ExtensionFileFilter;
 import org.mart.crs.utils.helper.Helper;
 import org.mart.crs.utils.helper.HelperFile;
@@ -81,7 +79,7 @@ public class RecognizeBeatSynchronousOperation extends RecognizeOperation {
 //        evaluator.evaluate(recognizedFolder, Settings.chordLabelsGroundTruthDir, recognizedFolder + ".txt");
 
 
-        ChordHTKParser parser = new ChordHTKParserHypotheses(outFilePath, recognizedFolder);
+        ChordHTKParser parser = new ChordHTKParserSegmentBasedHypotheses(outFilePath, recognizedFolder);
         parser.parseResults();
         List<ChordStructure> songList = parser.getResults();
 

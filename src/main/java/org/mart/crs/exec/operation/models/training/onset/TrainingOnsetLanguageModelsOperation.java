@@ -24,7 +24,7 @@ import org.mart.crs.exec.operation.models.training.chord.TrainingLanguageModelsO
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.management.beat.BeatStructure;
 import org.mart.crs.management.beat.segment.BeatSegment;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
 import org.mart.crs.management.label.LabelsParser;
 import org.mart.crs.management.label.LabelsSource;
 import org.mart.crs.model.htk.parser.chord.ChordHTKParser;
@@ -136,7 +136,7 @@ public class TrainingOnsetLanguageModelsOperation extends TrainingLanguageModels
      * @return is duration out of range
      */
     protected boolean appendBuild(StringBuilder builder, BeatSegment beatSegment, double stretch) {
-        int duration = (int)Math.round(stretch * beatSegment.getDuration() / (FeaturesManager.getChrSamplingPeriod(execParams) / ChordHTKParser.FEATURE_SAMPLE_RATE)); //in FeaturesManager.chrSamplingPeriod units
+        int duration = (int)Math.round(stretch * beatSegment.getDuration() / (FeaturesManagerChord.getChrSamplingPeriod(execParams) / ChordHTKParser.FEATURE_SAMPLE_RATE)); //in FeaturesManagerChord.chrSamplingPeriod units
         if (duration <= 0) {
             return false;
         }

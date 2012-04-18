@@ -126,8 +126,9 @@ public class ChordEvaluatorNema extends ChordEvaluator {
             Collections.sort(chordEvalResults);
             saveResults();
 
+            logger.info(String.format("Evaluation results: %5.3f", chordRecognitionRateGlobal));
             //test rendering
-            renderer.renderResults(results);
+//            renderer.renderResults(results);
         } catch (IOException e) {
             logger.error(Helper.getStackTrace(e));
         } catch (InstantiationException e) {

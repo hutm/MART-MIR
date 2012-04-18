@@ -14,11 +14,12 @@
  * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.mart.crs.management.features;
+package org.mart.crs.management.features.manager;
 
 import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Extensions;
 import org.mart.crs.config.Settings;
+import org.mart.crs.management.features.FeatureVector;
 import org.mart.crs.management.label.chord.ChordStructure;
 import org.mart.crs.utils.helper.HelperFile;
 
@@ -27,7 +28,7 @@ import org.mart.crs.utils.helper.HelperFile;
  * @version 1.0 5/9/11 11:00 AM
  * @author: Hut
  */
-public class FeaturesManagerKey extends FeaturesManager {
+public class FeaturesManagerKey extends FeaturesManagerChord {
 
     /**
      * Recognized chord structure extracted on previous steps
@@ -48,8 +49,7 @@ public class FeaturesManagerKey extends FeaturesManager {
      * @param featureVector
      */
     protected void storeDataInHTKFormat(String fileNameToStore, FeatureVector featureVector) {
-
-        storeDataInHTKFormatStatic(fileNameToStore, featureVector);
+        featureVector.storeDataInHTKFormat(fileNameToStore);
     }
 
 

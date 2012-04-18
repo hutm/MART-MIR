@@ -17,19 +17,18 @@
 package org.mart.crs.model.htk.parser.chord;
 
 /**
- * @version 1.0 6/22/11 1:55 PM
+ * @version 1.0 4/13/12 2:31 PM
  * @author: Hut
  */
-public class ChordHTKParserBeatSynchronous extends ChordHTKParserSegmentBasedHypotheses {
+public class ChordHTKParserChordSynchronous extends ChordHTKParserSegmentBasedHypotheses {
 
-    public ChordHTKParserBeatSynchronous(String htkOutFilePath, String parsedLabelsDir) {
+
+    public ChordHTKParserChordSynchronous(String htkOutFilePath, String parsedLabelsDir) {
         super(htkOutFilePath, parsedLabelsDir);
     }
 
-
-
     public void parseResults() {
         super.parseResults();
-        assignBeatTimings();
+        assignTimingsChordBased();
     }
 }

@@ -21,13 +21,11 @@ import org.mart.crs.config.Extensions;
 import org.mart.crs.config.Settings;
 import org.mart.crs.logging.CRSLogger;
 import org.mart.crs.management.beat.BeatStructure;
-import org.mart.crs.management.beat.segment.BeatSegment;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
 import org.mart.crs.management.label.LabelsSource;
 import org.mart.crs.management.label.chord.ChordSegment;
 import org.mart.crs.management.label.chord.ChordStructure;
 import org.mart.crs.utils.helper.Helper;
-import org.mart.crs.utils.helper.HelperFile;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -136,34 +134,88 @@ public class ChordHTKParser {
         assignBeatTimings(results);
     }
 
+    protected void assignTimingsBeatBased() {
+        assignTimingsBeatBased(results);
+    }
+
+    protected void assignTimingsChordBased() {
+        assignTimingsChordBased(results);
+    }
+
+
+    /**
+     * Time mapping is based on consecutive beat sequence.
+     *
+     * @param results
+     */
     protected static void assignBeatTimings(ArrayList<ChordStructure> results) {
         Collections.sort(results);
+
+        LabelsSource chordLabelSource = new LabelsSource(Settings.chordLabelsGroundTruthDir, true, "chordGT", Extensions.LABEL_EXT);
         LabelsSource beatLabelsSource = new LabelsSource(Settings.beatLabelsGroundTruthDir, true, "beatGT", Extensions.BEAT_EXTENSIONS);
 
         for (ChordStructure cs : results) {
             BeatStructure beatStructure = BeatStructure.getBeatStructure(beatLabelsSource.getFilePathForSong(cs.getSongName()));
 
-            List<BeatSegment> segments = beatStructure.getBeatSegments();
-            segments.add(new BeatSegment(0, 0));
-            beatStructure = new BeatStructure(segments, beatStructure.getSongName());
-
-            double[] beats;
-            if (FeaturesManager.downbeatGranulation) {
-                beats = beatStructure.getDownBeats();
-            } else{
-                beats = beatStructure.getBeats();
+            double duration = getSongDuration(chordLabelSource, cs.getSongName());
+            beatStructure.addTrailingBeats(duration);
+            double[] beats = beatStructure.getBeats();
+            if(cs.getChordSegments().size() != beats.length - 1){
+                logger.error(String.format("for song %s there is only %d beats for %d chords", cs.getSongName(), beats.length, cs.getChordSegments().size()));
+                continue;
             }
+            for (int i = 0; i < cs.getChordSegments().size(); i++) {
+                ChordSegment chordSegment = cs.getChordSegments().get(i);
+                chordSegment.setOnset(beats[i]);
+                chordSegment.setOffset(beats[i + 1]);
+            }
+        }
+    }
+
+    protected static void assignTimingsBeatBased(ArrayList<ChordStructure> results) {
+        Collections.sort(results);
+
+        LabelsSource chordLabelSource = new LabelsSource(Settings.chordLabelsGroundTruthDir, true, "chordGT", Extensions.LABEL_EXT);
+        LabelsSource beatLabelsSource = new LabelsSource(Settings.beatLabelsGroundTruthDir, true, "beatGT", Extensions.BEAT_EXTENSIONS);
+
+        for (ChordStructure cs : results) {
+            BeatStructure beatStructure = BeatStructure.getBeatStructure(beatLabelsSource.getFilePathForSong(cs.getSongName()));
+            double duration = getSongDuration(chordLabelSource, cs.getSongName());
+            beatStructure.addTrailingBeats(duration);
+            double[] beats = beatStructure.getBeats();
 
             for (int i = 0; i < cs.getChordSegments().size(); i++) {
                 ChordSegment chordSegment = cs.getChordSegments().get(i);
                 chordSegment.setOnset(beats[i]);
-                if ( i + 1 < cs.getChordSegments().size()) {
-                    chordSegment.setOffset(beats[i+1]);
-                } else{
-                    chordSegment.setOffset(beats[i] + 2 * (beats[i] - beats[i-1]));
-                }
+                chordSegment.setOffset(beats[i + 1]);
             }
         }
+    }
+
+
+    protected static void assignTimingsChordBased(ArrayList<ChordStructure> results) {
+        Collections.sort(results);
+        LabelsSource chordLabelSource = new LabelsSource(Settings.chordLabelsGroundTruthDir, true, "chordGT", Extensions.LABEL_EXT);
+
+        for (ChordStructure cs : results) {
+            ChordStructure chordStructure = new ChordStructure(chordLabelSource.getFilePathForSong(cs.getSongName()));
+
+            double[] chordBorders = chordStructure.getTimeGrid();
+
+            for (int i = 0; i < cs.getChordSegments().size(); i++) {
+                ChordSegment chordSegment = cs.getChordSegments().get(i);
+                chordSegment.setOnset(chordBorders[i]);
+                chordSegment.setOffset(chordBorders[i + 1]);
+            }
+        }
+    }
+
+
+    protected static double getSongDuration(LabelsSource chordLabelSource, String songName) {
+        ChordStructure chordStructure = new ChordStructure(chordLabelSource.getFilePathForSong(songName));
+        double[] timeGrid = chordStructure.getTimeGrid();
+        double duration = timeGrid[timeGrid.length - 1];
+        return duration;
     }
 
 //    protected void assignBeatTimings() {
@@ -173,7 +225,7 @@ public class ChordHTKParser {
 //        for (ChordStructure cs : results) {
 //            BeatStructure beatStructure = BeatStructure.getBeatStructure(beatLabelsSource.getFilePathForSong(cs.getSongName()));
 //            double[] beats;
-//            if (FeaturesManager.downbeatGranulation) {
+//            if (FeaturesManagerChord.downbeatGranulation) {
 //                beats = beatStructure.getDownBeats();
 //            } else{
 //                beats = beatStructure.getBeats();
@@ -185,7 +237,6 @@ public class ChordHTKParser {
 //            }
 //        }
 //    }
-
 
 
 }

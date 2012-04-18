@@ -23,7 +23,7 @@ import org.mart.crs.logging.CRSLogger;
 import org.mart.crs.management.beat.BeatStructure;
 import org.mart.crs.management.beat.segment.BeatSegment;
 import org.mart.crs.management.beat.segment.BeatSegmentState;
-import org.mart.crs.management.features.FeaturesManagerOnset;
+import org.mart.crs.management.features.manager.FeaturesManagerOnset;
 import org.mart.crs.management.label.LabelsParser;
 import org.mart.crs.model.htk.parser.chord.ChordHTKParser;
 import org.mart.crs.utils.helper.Helper;

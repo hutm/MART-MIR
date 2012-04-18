@@ -20,7 +20,7 @@ import org.mart.crs.config.ExecParams;
 import org.mart.crs.exec.operation.domain.AbstractCRSOperation;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.management.features.FeatureVector;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
 import org.mart.crs.utils.helper.HelperFile;
 
 import java.io.File;
@@ -55,7 +55,7 @@ public class FeaturesSaveOperation extends AbstractCRSOperation {
             File songDir = HelperFile.getFile(outDirPath + File.separator + hash);
             songDir.mkdirs();
             String filenameToSave = outDirPath + File.separator + hash + File.separator + featureVector.getFileNameToStoreTestVersion();
-            FeaturesManager.storeDataInHTKFormatStatic(filenameToSave, featureVector);
+            featureVector.storeDataInHTKFormat(filenameToSave);
         }
     }
 }

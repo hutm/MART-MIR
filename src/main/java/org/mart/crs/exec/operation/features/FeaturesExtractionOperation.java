@@ -24,7 +24,7 @@ import org.mart.crs.exec.scenario.stage.ITrainTest;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.logging.CRSLogger;
 import org.mart.crs.management.audio.ReferenceFreqManager;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
 import org.mart.crs.utils.CRSThreadPoolExecutor;
 import org.mart.crs.utils.helper.Helper;
 import org.mart.crs.utils.helper.HelperFile;
@@ -141,7 +141,7 @@ public class FeaturesExtractionOperation extends AbstractCRSOperation {
 
         public void run() {
             try {
-                FeaturesManager featuresManager =  operationDomain.getFeaturesManager(song, outDirPath, isForTraining, execParams);
+                FeaturesManagerChord featuresManager =  operationDomain.getFeaturesManager(song, outDirPath, isForTraining, execParams);
                 featuresManager.extractFeaturesForSong(ReferenceFreqManager.getReferenceFreqManager(refFreqFilePath));
 
             } catch (Exception e) {

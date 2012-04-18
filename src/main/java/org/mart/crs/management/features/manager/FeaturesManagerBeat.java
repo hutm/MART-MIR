@@ -14,13 +14,14 @@
  * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.mart.crs.management.features;
+package org.mart.crs.management.features.manager;
 
 import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Extensions;
 import org.mart.crs.config.Settings;
 import org.mart.crs.management.beat.BeatStructure;
 import org.mart.crs.management.beat.segment.BeatSegment;
+import org.mart.crs.management.features.FeatureVector;
 import org.mart.crs.management.features.extractor.FeaturesExtractorHTK;
 import org.mart.crs.management.label.LabelsSource;
 import org.mart.crs.management.label.chord.Root;
@@ -36,7 +37,7 @@ import static org.mart.crs.exec.operation.domain.BeatOperationDomain.minNimberOf
  * @version 1.0 Dec 3, 2010 6:30:33 PM
  * @author: Hut
  */
-public class FeaturesManagerBeat extends FeaturesManager {
+public class FeaturesManagerBeat extends FeaturesManagerChord {
 
     protected LabelsSource labelsSource;
 
@@ -98,7 +99,8 @@ public class FeaturesManagerBeat extends FeaturesManager {
 
         String fileNameToStore = new StringBuilder().append(dirName).append(File.separator).append(filename).toString();
         if (features.get(0).length == numberOfFrames + 2 * (execParams.statesBeat - 2)) {
-            storeDataInHTKFormat(fileNameToStore, new FeatureVector(features, chrSamplingPeriod));
+            FeatureVector vector = new FeatureVector(features, chrSamplingPeriod);
+            vector.storeDataInHTKFormat(fileNameToStore);
         } else{
             logger.warn(String.format("Segment %s is not eligible for training", filename));
         }
@@ -109,7 +111,7 @@ public class FeaturesManagerBeat extends FeaturesManager {
         FeatureVector featureVector = extractFeatureVectorForTest(refFrequency);
 
         String filenameToSave = new StringBuilder().append(dirName).append(File.separator).append(featureVector.getFileNameToStoreTestVersion()).toString();
-        storeDataInHTKFormat(filenameToSave, featureVector);
+        featureVector.storeDataInHTKFormat(filenameToSave);
     }
 
 

@@ -14,22 +14,24 @@
  * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package org.mart.crs.model.htk.parser.chord;
+package org.mart.crs.management.features.manager;
+
+import org.mart.crs.config.ExecParams;
 
 /**
- * @version 1.0 6/22/11 1:55 PM
+ * @version 1.0 7/4/11 7:15 PM
  * @author: Hut
  */
-public class ChordHTKParserBeatSynchronous extends ChordHTKParserSegmentBasedHypotheses {
+public class FeaturesManagerChordFullTraining extends FeaturesManagerChord {
 
-    public ChordHTKParserBeatSynchronous(String htkOutFilePath, String parsedLabelsDir) {
-        super(htkOutFilePath, parsedLabelsDir);
+    public FeaturesManagerChordFullTraining(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
+        super(songFilePath, outDirPath, isForTraining, execParams);
     }
 
 
-
-    public void parseResults() {
-        super.parseResults();
-        assignBeatTimings();
+    protected boolean isToSaveRotatedFeatures() {
+        return true;
     }
+
+
 }

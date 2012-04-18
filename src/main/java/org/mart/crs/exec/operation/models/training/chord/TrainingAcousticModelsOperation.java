@@ -23,7 +23,7 @@ import org.mart.crs.exec.operation.OperationType;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.exec.scenario.stage.TrainFeaturesStage;
 import org.mart.crs.exec.scenario.stage.TrainModelsStage;
-import org.mart.crs.management.features.FeaturesManager;
+import org.mart.crs.management.features.manager.FeaturesManagerChord;
 import org.mart.crs.model.htk.Cons;
 import org.mart.crs.model.htk.HMMPopulator;
 import org.mart.crs.utils.filefilter.TailPlusExtensionFileFilter;
@@ -101,8 +101,8 @@ public class TrainingAcousticModelsOperation extends AbstractCRSOperation {
         }
         (getFile(hedFilePath)).mkdirs();
 
-        if (FeaturesManager.featureSizes == null) {
-            FeaturesManager.initializeFeatureSize();
+        if (FeaturesManagerChord.featureSizes == null) {
+            FeaturesManagerChord.initializeFeatureSize();
         }
     }
 
@@ -111,9 +111,9 @@ public class TrainingAcousticModelsOperation extends AbstractCRSOperation {
         String command;
         //create prototype
         if (execParams.featureExtractors.length > 1) {
-            createPrototype(prototypePath, statesNumber, HelperArrays.sum(FeaturesManager.featureSizes), execParams.isDiagonal, FeaturesManager.featureSizes.length, FeaturesManager.featureSizes);
+            createPrototype(prototypePath, statesNumber, HelperArrays.sum(FeaturesManagerChord.featureSizes), execParams.isDiagonal, FeaturesManagerChord.featureSizes.length, FeaturesManagerChord.featureSizes);
         } else {
-            createPrototype(prototypePath, statesNumber, HelperArrays.sum(FeaturesManager.featureSizes), execParams.isDiagonal);
+            createPrototype(prototypePath, statesNumber, HelperArrays.sum(FeaturesManagerChord.featureSizes), execParams.isDiagonal);
         }
 
         logger.info("Initializing models...");
@@ -176,10 +176,10 @@ public class TrainingAcousticModelsOperation extends AbstractCRSOperation {
 
 
             //Now perform circular rotation to obtain all the models from the trained one
-            if(Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT)){
+            if(Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT) || Settings.operationType.equals(OperationType.CHORD_OPERATION_SEGMENT_BASED)){
                 HMMPopulator.transformTransitionMatrixRemovingAllSelfTransitions(hmmFilePath);
             }
-            if (Settings.operationType.equals(OperationType.CHORD_OPERATION) || Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT) || Settings.operationType.equals(OperationType.KEY_OPERATION)) {
+            if (Settings.operationType.equals(OperationType.CHORD_OPERATION) || Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT) || Settings.operationType.equals(OperationType.KEY_OPERATION) || Settings.operationType.equals(OperationType.CHORD_OPERATION_BEAT_SEGMENT_BASED) || Settings.operationType.equals(OperationType.CHORD_OPERATION_SEGMENT_BASED)) {
                 HMMPopulator.populate(hmmFilePath);
             }
             if (Settings.operationType.equals(OperationType.BEAT_OPERATION) || Settings.operationType.equals(OperationType.BEAT_ONLY_OPERATION)) {

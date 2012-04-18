@@ -196,6 +196,7 @@ public class ReflectUtils {
             try {
                 return classOrInstance.getClass().getField(fieldName);
             } catch (NoSuchFieldException e) {
+                logger.error(String.format("Could not find field %s in class %s", fieldName, classOrInstance));
                 e.printStackTrace();
             } catch (SecurityException e) {
                 e.printStackTrace();

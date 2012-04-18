@@ -26,6 +26,8 @@ public enum OperationType {
 
     CHORD_OPERATION("chord", ChordOperationDomain.class),
     CHORD_OPERATION_PER_BEAT("chordPerBeat", ChordPerBeatOperationDomain.class),
+    CHORD_OPERATION_SEGMENT_BASED("chordSegmentBased", ChordSegmentBasedOperationDomain.class),
+    CHORD_OPERATION_BEAT_SEGMENT_BASED("chordBeatSegmentBased", ChordSegmentBasedOnBeatsOperationDomain.class),
     CHORD_OPERATION_FULL_TRAIN("chordFullTrain", ChordFullTrainingOperationDomain.class),
     ONSET_OPERATION("onset", OnsetOperationDomain.class),
     BEAT_OPERATION("beat", BeatOperationDomain.class),

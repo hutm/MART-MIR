@@ -17,32 +17,37 @@
 package org.mart.crs.exec.operation.domain;
 
 import org.mart.crs.config.ExecParams;
-import org.mart.crs.exec.operation.models.test.chord.RecognizeConventionalVersionWithLMOperation;
+import org.mart.crs.exec.operation.models.test.chord.RecognizeSegmentsBeatsLanguageModelOperation;
+import org.mart.crs.exec.operation.models.test.chord.RecognizeSegmentsChordsLanguageModelOperation;
 import org.mart.crs.exec.operation.models.training.chord.TrainingLanguageModelsPerBeatOperation;
 import org.mart.crs.exec.scenario.stage.StageParameters;
+import org.mart.crs.management.features.manager.FeaturesManagerBeatSegmentBasedTest;
 import org.mart.crs.management.features.manager.FeaturesManagerChord;
-import org.mart.crs.management.features.manager.FeaturesManagerChordPerBeat;
+import org.mart.crs.management.features.manager.FeaturesManagerSegmentBasedTest;
 
 /**
- * @version 1.0 3/16/12 7:50 PM
+ * @version 1.0 4/11/12 7:03 PM
  * @author: Hut
  */
-public class ChordPerBeatOperationDomain extends ChordOperationDomain {
+public class ChordSegmentBasedOnBeatsOperationDomain extends ChordSegmentBasedOperationDomain {
 
-    @Override
-    public AbstractCRSOperation getRecognizeLanguageModelOperation(StageParameters stageParameters, ExecParams execParams) {
-        return new RecognizeConventionalVersionWithLMOperation(stageParameters, execParams);
-    }
+
+
 
     @Override
     public AbstractCRSOperation getTrainLanguageModelsOperation(StageParameters stageParameters, ExecParams execParams) {
         return new TrainingLanguageModelsPerBeatOperation(stageParameters, execParams);
     }
 
+
     @Override
-    public FeaturesManagerChord getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
-        return new FeaturesManagerChordPerBeat(songFilePath, outDirPath, isForTraining, execParams);
+    public AbstractCRSOperation getRecognizeLanguageModelOperation(StageParameters stageParameters, ExecParams execParams) {
+        return new RecognizeSegmentsBeatsLanguageModelOperation(stageParameters, execParams);
     }
 
 
+    @Override
+    public FeaturesManagerChord getFeaturesManager(String songFilePath, String outDirPath, boolean isForTraining, ExecParams execParams) {
+        return new FeaturesManagerBeatSegmentBasedTest(songFilePath, outDirPath, isForTraining, execParams);    //To change body of overridden methods use File | Settings | File Templates.
+    }
 }
