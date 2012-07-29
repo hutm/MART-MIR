@@ -63,7 +63,7 @@ public class ConfusionChordManager {
         writeToAFile(outFile);
     }
 
-    private void writeToAFile(String outFile) {
+    protected void writeToAFile(String outFile) {
         StringBuffer stringBuffer = new StringBuffer();
         for (ChordType chordType : ChordType.chordDictionary) {
             confusionMatrixMap.get(chordType).appendConfusionMatrixStringData(stringBuffer);

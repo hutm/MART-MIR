@@ -176,7 +176,7 @@ public class TrainingAcousticModelsOperation extends AbstractCRSOperation {
 
 
             //Now perform circular rotation to obtain all the models from the trained one
-            if(Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT) || Settings.operationType.equals(OperationType.CHORD_OPERATION_SEGMENT_BASED)){
+            if(Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT) || Settings.useFrameLevelTranscript){
                 HMMPopulator.transformTransitionMatrixRemovingAllSelfTransitions(hmmFilePath);
             }
             if (Settings.operationType.equals(OperationType.CHORD_OPERATION) || Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT) || Settings.operationType.equals(OperationType.KEY_OPERATION) || Settings.operationType.equals(OperationType.CHORD_OPERATION_BEAT_SEGMENT_BASED) || Settings.operationType.equals(OperationType.CHORD_OPERATION_SEGMENT_BASED)) {

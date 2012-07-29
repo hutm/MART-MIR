@@ -32,11 +32,11 @@ import org.mart.crs.management.features.extractor.SpectrogramType;
 public class CoreElementsInitializer {
 
     public static PCP initializePCPWithExecParamsData(int pcpType, double refFrequency, ExecParams execParams){
-           return PCP.getPCP(PCP.BASIC_ALG, refFrequency, execParams.pcpAveragingFactor, 1, execParams.isToNormalizeFeatureVectors, execParams.startMidiNote, execParams.endMidiNote, execParams.spectrumMagnitudeRateForChromaCalculation);
+           return PCP.getPCP(PCP.BASIC_ALG, refFrequency, execParams.pcpAveragingFactor, execParams.numberOfSemitonesPerBin, execParams.isToNormalizeFeatureVectors, execParams.startMidiNote, execParams.endMidiNote, execParams.spectrumMagnitudeRateForChromaCalculation);
     }
 
     public static PCP initializeBassPCPWithExecParamsData(int pcpType, double refFrequency, ExecParams execParams){
-        return PCP.getPCP(PCP.BASIC_ALG, refFrequency, execParams.pcpAveragingFactor, 1, execParams.isToNormalizeFeatureVectors, execParams.startMidiNoteBass, execParams.endMidiNoteBass, execParams.spectrumMagnitudeRateForChromaCalculation);
+        return PCP.getPCP(PCP.BASIC_ALG, refFrequency, execParams.pcpAveragingFactor, execParams.numberOfSemitonesPerBin, execParams.isToNormalizeFeatureVectors, execParams.startMidiNoteBass, execParams.endMidiNoteBass, execParams.spectrumMagnitudeRateForChromaCalculation);
     }
 
 

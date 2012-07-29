@@ -53,19 +53,7 @@ public class ChordSegmentBasedOperationDomain extends ChordOperationDomain {
     }
 
 
-//    public void createMLF() {
-//        try {
-//            FileWriter fileWriter = new FileWriter(HelperFile.getFile(crsOperation.mlfFilePath));
-//            fileWriter.write("#!MLF!#\n");
-//            for (ChordType modality : ChordType.chordDictionary) {
-//                fileWriter.write(String.format("\"*.lab\"\n%s\n.\n", modality.getName()));
-//            }
-//            fileWriter.close();
-//        } catch (IOException e) {
-//            logger.error("Problems: ");
-//            logger.error(Helper.getStackTrace(e));
-//        }
-//    }
+
 
 
 

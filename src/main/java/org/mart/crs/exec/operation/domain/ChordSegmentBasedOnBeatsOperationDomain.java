@@ -31,9 +31,6 @@ import org.mart.crs.management.features.manager.FeaturesManagerSegmentBasedTest;
  */
 public class ChordSegmentBasedOnBeatsOperationDomain extends ChordSegmentBasedOperationDomain {
 
-
-
-
     @Override
     public AbstractCRSOperation getTrainLanguageModelsOperation(StageParameters stageParameters, ExecParams execParams) {
         return new TrainingLanguageModelsPerBeatOperation(stageParameters, execParams);

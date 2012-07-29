@@ -169,6 +169,7 @@ public class ExecParams implements Cloneable, Serializable{
     public float spectrumMagnitudeRateForChromaCalculation;
     public boolean isToNormalizeFeatureVectors;
     public int pcpAveragingFactor;
+    public int numberOfSemitonesPerBin = 1;
     public boolean extractDeltaCoefficients;  //IF set to true, the output feature vectors are double sized by adding dynamics
     public int regressionWindowForDeltaCoefficients;
 

@@ -137,6 +137,10 @@ public class RecognizeOperation extends AbstractCRSOperation {
     }
 
     protected void createGrammarFile(boolean isOnlyOneChord) {
+        if(Settings.useFrameLevelTranscript){
+            createGrammarFileForFrameLevelTranscript(isOnlyOneChord);
+            return;
+        }
         try {
             StringBuffer buffer = new StringBuffer();
             FileWriter writer = new FileWriter(getFile(gramFilePath));
@@ -160,6 +164,32 @@ public class RecognizeOperation extends AbstractCRSOperation {
             } else {
                 writer.write("($chords)");
             }
+            writer.close();
+        } catch (IOException e) {
+            logger.error(Helper.getStackTrace(e));
+        }
+    }
+
+
+    protected void createGrammarFileForFrameLevelTranscript(boolean isOnlyOneChord) {
+        try {
+            StringBuffer buffer = new StringBuffer();
+            FileWriter writer = new FileWriter(getFile(gramFilePath));
+            buffer.append("(");
+            for (ChordType modality : chordDictionary) {
+                if (!modality.equals(ChordType.NOT_A_CHORD)) {
+                    for (Root root : Root.values()) {
+                        buffer.append(String.format("{%s%s} | ", root, modality));
+                    }
+                }
+            }
+            if (Arrays.asList(chordDictionary).contains(NOT_A_CHORD)) {
+                buffer.append(String.format("{%s}", ChordType.NOT_A_CHORD.getOriginalName()));
+            } else {
+                buffer.deleteCharAt(buffer.length() - 2);
+            }
+            buffer.append(")\r\n");
+            writer.write(buffer.toString());
             writer.close();
         } catch (IOException e) {
             logger.error(Helper.getStackTrace(e));
@@ -240,15 +270,16 @@ public class RecognizeOperation extends AbstractCRSOperation {
         for (int i = 0; i < numberOfHmms; i++) {
             command = command + String.format(" -H %s/%s/%s ", trainedModelsDir, hmmFolder, hmmDefs + i);
         }
-        if (isToOutputLattices) {
-            command = command + String.format(" -H %s/%s/%s -T 1 -S %s -i %s -z lattice -n %d -q Atvaldmn -w %s -p %5.2f %s %s",
-                    trainedModelsDir, hmmFolder, macros, featureFileListTest, decodedOutPath,
-                    execParams.NBestCalculationLatticeOrder, netFilePath, penalty, dictFilePath, wordListTestPath);   //TODO if FLM wordListLMPath - not sure
-        } else {
-            command = command + String.format(" -H %s/%s/%s -T 1 -S %s -i %s -w %s -p %5.2f %s %s",
-                    trainedModelsDir, hmmFolder, macros, featureFileListTest, decodedOutPath,
-                    netFilePath, penalty, dictFilePath, wordListTestPath);
+        command = command + String.format(" -H %s/%s/%s -T 1 -S %s -i %s ",  trainedModelsDir, hmmFolder, macros, featureFileListTest, decodedOutPath);
+
+        if(Settings.useFrameLevelTranscript || isToOutputLattices){
+            command = command + String.format(" -n %d %d ", execParams.NBestCalculationLatticeOrder, execParams.NBestCalculationLatticeOrder);
         }
+        if (isToOutputLattices) {
+            command = command + String.format("-z lattice -q Atvaldmn ");
+        }
+        command = command + String.format(" -w %s -p %5.2f %s %s", netFilePath, penalty, dictFilePath, wordListTestPath);
+
         Helper.execCmd(command);
     }
 

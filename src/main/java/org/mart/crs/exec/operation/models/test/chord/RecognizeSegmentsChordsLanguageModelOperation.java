@@ -184,7 +184,7 @@ public class RecognizeSegmentsChordsLanguageModelOperation extends RecognizeSegm
         for (int i = 0; i < Configuration.NUMBER_OF_SEMITONES_IN_OCTAVE; i++) {
             command = command + String.format(" -H %s/%s/%s ", trainedModelsDir, hmmFolder + "_" + gaussianNumber, hmmDefs + i);
         }
-        command = command + String.format(" -H %s/%s/%s -T 1 -S %s -i %s -n 4 4 -w %s -p %5.2f %s %s",
+        command = command + String.format(" -H %s/%s/%s -T 1 -S %s -i %s -n 3 3 -w %s -p %5.2f %s %s",
                 trainedModelsDir, hmmFolder + "_" + gaussianNumber, macros, featureFileListTest, decodedOutPath,
                 netFilePath, penalty, dictFilePath, wordListTestPath);
         Helper.execCmd(command);

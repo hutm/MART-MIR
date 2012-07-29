@@ -22,7 +22,9 @@ import org.mart.crs.config.Settings;
 import org.mart.crs.exec.operation.eval.AbstractCRSEvaluator;
 import org.mart.crs.exec.operation.eval.chord.confusion.ConfusionChordManager;
 import org.mart.crs.logging.CRSLogger;
+import org.mart.crs.management.beat.BeatStructure;
 import org.mart.crs.management.label.LabelsParser;
+import org.mart.crs.management.label.LabelsSource;
 import org.mart.crs.management.label.chord.ChordSegment;
 import org.mart.crs.management.label.chord.ChordStructure;
 import org.mart.crs.management.label.chord.ChordType;
@@ -52,6 +54,8 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
     protected static Logger logger = CRSLogger.getLogger(ChordEvaluator.class);
 
     public static final boolean NEMA_BASED_EVALUATION = true;
+    public static boolean PERFORM_REFINING_IN_CHORD_HYPOS = false;
+    public static int REFINING_IN_CHORD_HYPOS_ORDER = 0;
 
     public static final String CHORD_RECOGNITION_RATE_TIME_NAME = "CRRTime";
     public static final String CHORD_RECOGNITION_RATE_NAME = "CRR";
@@ -124,8 +128,21 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
                 continue;
             }
             if (NEMA_BASED_EVALUATION) {
-                chordList = (new ChordStructure(song.getAbsolutePath())).getChordSegments();
-                chordListGT = (new ChordStructure(GTFilePath)).getChordSegments();
+                ChordStructure structureGT = new ChordStructure(GTFilePath);
+                chordListGT = structureGT.getChordSegments();
+
+                ChordStructure structure = new ChordStructure(song.getAbsolutePath());
+                if(PERFORM_REFINING_IN_CHORD_HYPOS){
+                    LabelsSource beatLabelSource = new LabelsSource(Settings.beatLabelsGroundTruthDir, true, "beatGT", Extensions.BEAT_EXTENSIONS);
+                    BeatStructure beatStructure = BeatStructure.getBeatStructure(beatLabelSource.getFilePathForSong(song.getName()));
+                    beatStructure.addTrailingBeats(structure.getSongDuration());
+                    if (REFINING_IN_CHORD_HYPOS_ORDER > 0) {
+                        structure.refineHypothesesLeavingOrder(REFINING_IN_CHORD_HYPOS_ORDER, beatStructure.getBeats());
+                    } else {
+                        structure.refineHypothesesUsingBeats(beatStructure.getBeats());
+                    }
+                }
+                chordList = structure.getChordSegments();
             } else{
                 chordList = LabelsParser.getSegments(song.getAbsolutePath(), true);
                 chordListGT = LabelsParser.getSegments(GTFilePath, true);

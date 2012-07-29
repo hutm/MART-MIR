@@ -154,4 +154,9 @@ public class Settings {
     public static boolean forceReExtractRefFreq = false;
 
 
+
+    public static boolean useOnlyOneModel;
+    public static boolean useFrameLevelTranscript;
+
+
 }
