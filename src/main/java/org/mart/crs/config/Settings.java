@@ -24,6 +24,7 @@ import org.mart.crs.utils.ReflectUtils;
 import org.mart.crs.utils.helper.HelperFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -114,6 +115,7 @@ public class Settings {
     public static void readProperties(String fileName) {
         properties = new Properties();
         try {
+            logger.info(String.format("Loading configuration file %s", (new File(fileName)).getAbsolutePath()));
             properties.load(new FileInputStream(fileName));
             ReflectUtils.fillInVariables(Settings.class, properties);
             Configuration.chordDictionary = Settings.chordDictionary;

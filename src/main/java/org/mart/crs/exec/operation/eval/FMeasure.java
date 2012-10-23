@@ -200,13 +200,13 @@ public class FMeasure {
         }
     }
 
-    private float getMean(List<Float> list) {
-        float sum = 0;
-        for (Float aList : list) {
-            sum += aList;
-        }
-        return sum / list.size();
-    }
+//    private float getMean(List<Float> list) {
+//        float sum = 0;
+//        for (Float aList : list) {
+//            sum += aList;
+//        }
+//        return sum / list.size();
+//    }
 
     private double getMean(List<Double> list) {
         double sum = 0;

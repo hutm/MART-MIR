@@ -108,7 +108,7 @@ public class RecognizeBeatConventionalVersionWithLMOperation extends RecognizeBe
                     for (String inLattice : latticeFilePathList) {
                         try {
                             BufferedWriter writer = new BufferedWriter(new FileWriter(outRescoredFile));
-                            command = String.format("%lattice-tool%s  -debug 0 -in-lattice %s -read-htk -htk-lmscale %5.3f -htk-wdpenalty %5.3f -htk-acscale %5.3f  -nbest-viterbi -output-ctm -viterbi-decode", EXECUTABLE_EXTENSION, inLattice, lmWeight, wip, acWeight);
+                            command = String.format("lattice-tool%s  -debug 0 -in-lattice %s -read-htk -htk-lmscale %5.3f -htk-wdpenalty %5.3f -htk-acscale %5.3f  -nbest-viterbi -output-ctm -viterbi-decode", EXECUTABLE_EXTENSION, inLattice, lmWeight, wip, acWeight);
                             Helper.execCmd(command, writer, false);
                             writer.close();
                         } catch (IOException e) {

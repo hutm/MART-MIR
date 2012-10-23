@@ -1,5 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <version>0.1-SNAPSHOT</version>
+        <groupId>org.mart</groupId>
+        <artifactId>mart</artifactId>
+    </parent>
+
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mart</groupId>
@@ -11,7 +17,7 @@
 
     <properties>
         <myapp.jar.name>${name}-${version}.jar</myapp.jar.name>
-        <external.properties.file>../PHD/mart.properties</external.properties.file>
+        <external.properties.file>../mart.properties</external.properties.file>
     </properties>
 
 
@@ -19,18 +25,18 @@
     <dependencies>
         <dependency>
             <groupId>org.mart</groupId>
-            <artifactId>mart</artifactId>
+            <artifactId>mart-core</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
-    </dependencies>
 
-    <distributionManagement>
-        <repository>
-            <id>repo</id>
-            <name>khadkevich</name>
-            <url>file:///home/hut/prg/PROJECTS/WEBPAGES/repository/</url>
-        </repository>
-    </distributionManagement>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.8</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
 
     <build>
@@ -107,9 +113,9 @@
                                     java -Xmx1500m -jar ./lib/${name}-${version}.jar $1 $2 $3 $4 $5 $6 $7 $8 $9
                                 </echo>
                                 <echo file="${build.dir}/service.sh">
-mkdir ./libService
+mkdir -p ./libService
 cp -r ./lib/** ./libService/
-java -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOSTNAME
+java -Xmx200m -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOSTNAME
                                 </echo>
 
                             </tasks>
@@ -137,6 +143,19 @@ java -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOSTNAME
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.4</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+
+
         </plugins>
     </build>
 
@@ -168,7 +187,7 @@ java -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOSTNAME
                                                 >
                                             <fileset dir="${build.dir}/">
                                                 <include name="lib/${myapp.jar.name}"/>
-                                                <include name="cfg/config.cfg"/>
+                                                <!--<include name="cfg/config.cfg"/>-->
                                                 <include name="lib/mart-1.0-SNAPSHOT.jar"/>
                                                 <include name="service.sh"/>
                                             </fileset>

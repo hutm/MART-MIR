@@ -14,6 +14,22 @@
  * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+/*
+ * This file is part of MART.
+ * MART is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2, as published
+ * by the Free Software Foundation.
+ *
+ * MART is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MART; if not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 package org.mart.crs.exec.operation.eval.chord;
 
 import org.mart.crs.config.Settings;
@@ -29,9 +45,10 @@ import java.util.List;
  * @version 1.0 4/18/12 9:55 PM
  * @author: Hut
  */
+
 public class ChordEvaluatorTimeGridTest {
 
-    @Test
+    @Test(groups = {"static"})
     public void testEvaluate(){
 //        ChordEvaluator.PERFORM_REFINING_IN_CHORD_HYPOS = true;
         ChordEvaluatorTimeGrid chordEvaluatorTimeGrid = new ChordEvaluatorTimeGrid();
@@ -41,7 +58,7 @@ public class ChordEvaluatorTimeGridTest {
 
 
 
-    @Test
+    @Test(groups = {"static"})
     public void testEvaluateFromSeveralSources(){
         ChordEvaluatorTimeGridSeveralSources.majorVoting = true;
 
@@ -59,7 +76,7 @@ public class ChordEvaluatorTimeGridTest {
 
     }
 
-    @Test
+    @Test(groups = {"static"})
     public void testEvaluateHypos(){
         ChordEvaluatorTimeGridBeatSync chordEvaluatorTimeGrid = new ChordEvaluatorTimeGridBeatSync();
         chordEvaluatorTimeGrid.initializeDirectories("/home/hut/prg/PROJECTS/temp/-firstPass-", "/home/hut/mirdata/beatles/chordLab", "/home/hut/prg/PROJECTS/temp/-firstPass-.txt");
@@ -68,7 +85,7 @@ public class ChordEvaluatorTimeGridTest {
     }
 
 
-    @Test
+    @Test(groups = {"static"})
     public void testEvaluateHyposRefine(){
         ChordEvaluator.PERFORM_REFINING_IN_CHORD_HYPOS = true;
         ChordEvaluatorTimeGrid chordEvaluatorTimeGrid = new ChordEvaluatorTimeGrid();
@@ -78,7 +95,7 @@ public class ChordEvaluatorTimeGridTest {
     }
 
 
-    @Test
+    @Test(groups = {"static"})
     public void testEvaluateHyposRefineLeavingOrder(){
         ChordEvaluator.PERFORM_REFINING_IN_CHORD_HYPOS = true;
         ChordEvaluator.REFINING_IN_CHORD_HYPOS_ORDER = 1;
@@ -88,7 +105,7 @@ public class ChordEvaluatorTimeGridTest {
     }
 
 
-    @Test
+    @Test(groups = {"static"})
     public void transformChordLabels(){
         File[] inFiles = HelperFile.getFile("/home/hut/prg/PROJECTS/temp/checkConsistency/-firstPass-").listFiles();
         String outFolder = "/home/hut/prg/PROJECTS/temp/checkConsistency/-firstPass-Transformed";
@@ -100,7 +117,7 @@ public class ChordEvaluatorTimeGridTest {
         }
     }
 
-    @Test
+    @Test(groups = {"static"})
     public void testEvaluate8088(){
         Settings.initialize();
         ChordEvaluatorTimeGrid chordEvaluatorTimeGrid = new ChordEvaluatorTimeGrid();
@@ -109,7 +126,7 @@ public class ChordEvaluatorTimeGridTest {
     }
 
 
-    @Test
+    @Test(groups = {"static"})
     public void testEvaluateChordsGeneral(){
         Settings.initialize();
         ChordEvaluatorTimeGrid chordEvaluatorTimeGrid = new ChordEvaluatorTimeGrid();
@@ -118,7 +135,7 @@ public class ChordEvaluatorTimeGridTest {
     }
 
 
-    @Test
+    @Test(groups = {"static"})
     public void testEvaluateChordsCR(){
         Settings.initialize();
         ChordEvaluatorTimeGrid chordEvaluatorTimeGrid = new ChordEvaluatorTimeGrid();

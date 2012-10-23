@@ -23,6 +23,7 @@ import org.mart.crs.config.Settings;
 import org.mart.crs.core.AudioReader;
 import org.mart.crs.core.onset.OnsetDetectionFunction;
 import org.mart.crs.core.spectrum.SpectrumImpl;
+import org.mart.crs.core.spectrum.reassigned.ReassignedSpectrum;
 import org.mart.crs.exec.operation.Operation;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.management.features.CoreElementsInitializer;
@@ -68,7 +69,7 @@ public class OnsetDetectionOperation extends Operation {
         List<String> testFiles = HelperFile.readLinesFromTextFile(this.filePathWavList);
         for(String testFile:testFiles){
             AudioReader audioReader = new AudioReader(testFile);
-            SpectrumImpl spectrum =  CoreElementsInitializer.initializeSpectrumWithExecParamsData(SpectrogramType.PERCUSSIVE, audioReader.getSamples(), audioReader.getSampleRate(), _initialExecParameters);
+            ReassignedSpectrum spectrum =  (ReassignedSpectrum)CoreElementsInitializer.initializeSpectrumWithExecParamsData(SpectrogramType.PERCUSSIVE, audioReader.getSamples(), audioReader.getSampleRate(), _initialExecParameters);
             OnsetDetectionFunction onsetDetectionFunction = new OnsetDetectionFunction(spectrum);
             float[] onsetDetectionFunctionData = onsetDetectionFunction.getDetectionFunction();
             float average = HelperArrays.calculateMean(onsetDetectionFunctionData);

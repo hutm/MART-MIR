@@ -1,5 +1,6 @@
 package org.mart.crs.utils;
 
+import org.mart.crs.config.ConfigSettings;
 import org.mart.crs.config.ExecParams;
 import org.mart.crs.exec.scenario.BatchParameter;
 import org.testng.Assert;
@@ -23,6 +24,7 @@ public class ReflectUtilsTest {
      */
     @Test
     public void testSetVariableValue() throws Exception {
+        ConfigSettings.CONFIG_FILE_PATH = this.getClass().getResource("/cfg/configBeatsProto.cfg").getPath();
         ExecParams execParams = new ExecParams();
         List<BatchParameter> fields = ReflectUtils.getSettingsVariables(execParams, "_TRAIN_FEATURES_");
         String fieldName = fields.get(0).getField().getName();

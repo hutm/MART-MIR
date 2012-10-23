@@ -23,7 +23,7 @@ import org.mart.crs.exec.scenario.stage.ITrainTest;
 import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.management.audio.ReferenceFreqManager;
 import org.mart.crs.utils.helper.HelperFile;
-import org.mart.tools.tuning.Tuner;
+import org.mart.crs.management.audio.tuning.Tuner;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -85,7 +85,7 @@ public class ReferenceFrequencyExtractionOperation extends AbstractCRSOperation 
                 Tuner tuner = null;
                 try {
                     logger.info(String.format("Extracting reference frequency from file %s", HelperFile.getFile(filePath).getName()));
-                    Constructor c = Class.forName("org.mart.tools.tuning." + REF_FREQ_TUNER).getConstructor(new Class[]{String.class});
+                    Constructor c = Class.forName("org.mart.crs.management.audio.tuning." + REF_FREQ_TUNER).getConstructor(new Class[]{String.class});
                     tuner = (Tuner) c.newInstance(filePath);
                 } catch (InstantiationException e) {
                     e.printStackTrace();
