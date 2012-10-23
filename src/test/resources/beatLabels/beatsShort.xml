@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2009 IRCAM, All Rights Reserved.
+   Permission is only granted to use this code for Quaero evaluation purposes.
+-->
+<musicdescription xmlns="http://www.quaero.org/Music_6/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" format="20090701A" xsi:schemaLocation="http://www.quaero.org/Music_6/1.0 http://www.ircam.fr/anasyn/quaero/quaero_ctc_6_music.xsd" date="2009-04-21">
+    <media>0400 - George Michael - Careless Whisper.wav</media>
+    <descriptiondefinition id="1">
+        <type>beat</type>
+        <generator name="cvtQIMA_1.5 converter" version="1.0.0" date="2009-06-29"/>
+    </descriptiondefinition>
+    <segment time="0" length="0.280208" sourcetrack="0">
+        <audiocontent id="1" type="silence"/>
+    </segment>
+    <segment time="0.280208" length="297.095834" sourcetrack="0">
+        <audiocontent id="1" type="music"/>
+    </segment>
+    <segment time="297.376042" length="6.885958" sourcetrack="0">
+        <audiocontent id="1" type="silence"/>
+    </segment>
+    
+    <segment time="1.9219" length="0" comment="timesignature-4/4" sourcetrack="0">
+        <timesignature id="1" beatspermeasure="4" beatduration="4"/>
+    </segment>
+    <segment time="1.921875" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="1" beat="1" tatum="1"/>
+    </segment>
+    <segment time="2.703125" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="2" tatum="1"/>
+    </segment>
+    <segment time="3.483333" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="3" tatum="1"/>
+    </segment>
+    <segment time="4.264583" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="4" tatum="1"/>
+    </segment>
+    <segment time="5.044792" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="1" beat="1" tatum="1"/>
+    </segment>
+    <segment time="5.821875" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="2" tatum="1"/>
+    </segment>
+    <segment time="6.597917" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="3" tatum="1"/>
+    </segment>
+    <segment time="7.373958" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="4" tatum="1"/>
+    </segment>
+    <segment time="8.150000" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="1" beat="1" tatum="1"/>
+    </segment>
+    <segment time="8.927083" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="2" tatum="1"/>
+    </segment>
+    <segment time="9.703125" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="3" tatum="1"/>
+    </segment>
+    <segment time="10.479167" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="4" tatum="1"/>
+    </segment>
+    <segment time="11.256250" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="1" beat="1" tatum="1"/>
+    </segment>
+    <segment time="12.031250" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="2" tatum="1"/>
+    </segment>
+    <segment time="12.808333" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="3" tatum="1"/>
+    </segment>
+    <segment time="13.584375" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="4" tatum="1"/>
+    </segment>
+    <segment time="14.360417" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="1" beat="1" tatum="1"/>
+    </segment>
+    <segment time="15.156250" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="2" tatum="1"/>
+    </segment>
+    <segment time="15.951042" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="3" tatum="1"/>
+    </segment>
+    <segment time="16.728125" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="4" tatum="1"/>
+    </segment>
+    <segment time="17.506250" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="1" beat="1" tatum="1"/>
+    </segment>
+    <segment time="18.285417" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="2" tatum="1"/>
+    </segment>
+    <segment time="19.064583" length="0" comment="?" sourcetrack="0">
+        <beattype id="1" pattern="0" measure="0" beat="3" tatum="1"/>
+    </segment>
+    
+</musicdescription>

@@ -3,4 +3,4 @@ target/
 *.ipr
 bin/
 logs
-
+cfg/temp/
