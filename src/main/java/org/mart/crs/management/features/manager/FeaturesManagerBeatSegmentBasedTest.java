@@ -19,24 +19,13 @@ package org.mart.crs.management.features.manager;
 import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Extensions;
 import org.mart.crs.config.Settings;
-import org.mart.crs.exec.operation.domain.ChordSmartLatticeDomain;
 import org.mart.crs.management.beat.BeatStructure;
-import org.mart.crs.management.beat.segment.BeatSegment;
-import org.mart.crs.management.config.Configuration;
 import org.mart.crs.management.features.FeatureVector;
 import org.mart.crs.management.features.extractor.FeaturesExtractorHTK;
-import org.mart.crs.management.label.chord.ChordSegment;
-import org.mart.crs.management.label.chord.ChordStructure;
-import org.mart.crs.management.label.chord.ChordType;
 import org.mart.crs.management.label.chord.Root;
-import org.mart.crs.utils.helper.HelperArrays;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.TreeMap;
-
-import static org.mart.crs.management.label.chord.ChordType.isToUseChordWrappersToTrainChordChildren;
 
 /**
  * @version 1.0 4/11/12 6:20 PM
@@ -62,7 +51,7 @@ public class FeaturesManagerBeatSegmentBasedTest extends FeaturesManagerSegmentB
         }
 
         BeatStructure beatStructure = BeatStructure.getBeatStructure(lblFilePath);
-        beatStructure.addTrailingBeats(songDuration);
+        beatStructure.fixBeatStructure(songDuration);
         double[] beats = beatStructure.getBeats();
 
         for (int i = 0; i < beats.length; i++) {

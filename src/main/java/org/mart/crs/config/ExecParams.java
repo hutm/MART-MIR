@@ -130,6 +130,9 @@ public class ExecParams implements Cloneable, Serializable{
     public boolean isDiagonal;
     public int gaussianNumber;
     public float penalty;
+    public int numberOfIterationsHERest = 6;
+    public boolean recognizeAtEachIteration = false;
+    public int interationInHEREST;
 
     public int NBestCalculationLatticeOrder;
     public int latticeRescoringOrder;

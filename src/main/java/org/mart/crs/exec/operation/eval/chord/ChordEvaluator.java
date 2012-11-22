@@ -135,7 +135,7 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
                 if(PERFORM_REFINING_IN_CHORD_HYPOS){
                     LabelsSource beatLabelSource = new LabelsSource(Settings.beatLabelsGroundTruthDir, true, "beatGT", Extensions.BEAT_EXTENSIONS);
                     BeatStructure beatStructure = BeatStructure.getBeatStructure(beatLabelSource.getFilePathForSong(song.getName()));
-                    beatStructure.addTrailingBeats(structure.getSongDuration());
+                    beatStructure.fixBeatStructure(structure.getSongDuration());
                     if (REFINING_IN_CHORD_HYPOS_ORDER > 0) {
                         structure.refineHypothesesLeavingOrder(REFINING_IN_CHORD_HYPOS_ORDER, beatStructure.getBeats());
                     } else {

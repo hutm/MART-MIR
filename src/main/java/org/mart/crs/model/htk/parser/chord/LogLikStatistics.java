@@ -17,14 +17,11 @@
 package org.mart.crs.model.htk.parser.chord;
 
 import org.mart.crs.config.Extensions;
-import org.mart.crs.config.Settings;
 import org.mart.crs.management.beat.BeatStructure;
 import org.mart.crs.management.label.LabelsSource;
 import org.mart.crs.management.label.chord.ChordSegment;
 import org.mart.crs.management.label.chord.ChordStructure;
 import org.mart.crs.utils.helper.HelperFile;
-import sun.rmi.log.LogInputStream;
-import sun.security.x509.Extension;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,7 +75,7 @@ public class LogLikStatistics {
             ChordStructure chordStructureGT = new ChordStructure(chordGTLabelsource.getFilePathForSong(file.getName()));
 
             BeatStructure beatStructure = BeatStructure.getBeatStructure(beatLabelSource.getFilePathForSong(file.getName()));
-            beatStructure.addTrailingBeats(chordStructure.getSongDuration());
+            beatStructure.fixBeatStructure(chordStructure.getSongDuration());
             double[] timings = beatStructure.getBeats();
 
             beatSyncChordList = assignBeatTimings(chordStructure, timings);

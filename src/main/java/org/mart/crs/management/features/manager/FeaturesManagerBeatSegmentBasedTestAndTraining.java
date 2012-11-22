@@ -55,7 +55,7 @@ public class FeaturesManagerBeatSegmentBasedTestAndTraining extends FeaturesMana
         ChordStructure chordStructure = new ChordStructure(chordFilePath);
         BeatStructure beatStructure = BeatStructure.getBeatStructure(beatFilePath);
 
-        beatStructure.addTrailingBeats(songDuration);
+        beatStructure.fixBeatStructure(songDuration);
 
         if (chordFilePath == null || beatFilePath == null) {
             logger.warn(String.format("Could not find labels for song %s", songFilePath));

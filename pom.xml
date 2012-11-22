@@ -11,7 +11,7 @@
     <groupId>org.mart</groupId>
     <artifactId>mart-mir</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <name>mart-mir</name>
     <url>http://mart.khadkevich.org</url>
 
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>org.mart</groupId>
             <artifactId>mart-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
@@ -188,7 +188,7 @@ java -Xmx200m -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOST
                                             <fileset dir="${build.dir}/">
                                                 <include name="lib/${myapp.jar.name}"/>
                                                 <!--<include name="cfg/config.cfg"/>-->
-                                                <include name="lib/mart-1.0-SNAPSHOT.jar"/>
+                                                <include name="lib/mart-core-1.0.jar"/>
                                                 <include name="service.sh"/>
                                             </fileset>
                                         </scp>

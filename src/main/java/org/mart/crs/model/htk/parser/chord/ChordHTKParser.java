@@ -17,11 +17,13 @@
 package org.mart.crs.model.htk.parser.chord;
 
 import org.apache.log4j.Logger;
+import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Extensions;
 import org.mart.crs.config.Settings;
 import org.mart.crs.logging.CRSLogger;
 import org.mart.crs.management.beat.BeatStructure;
-import org.mart.crs.management.features.manager.FeaturesManagerChord;
+import org.mart.crs.management.features.extractor.FeaturesExtractorHTK;
+import org.mart.crs.management.features.manager.FeaturesManager;
 import org.mart.crs.management.label.LabelsSource;
 import org.mart.crs.management.label.chord.ChordSegment;
 import org.mart.crs.management.label.chord.ChordStructure;
@@ -46,6 +48,7 @@ public class ChordHTKParser {
     protected static Logger logger = CRSLogger.getLogger(ChordHTKParser.class);
 
     public static float FEATURE_SAMPLE_RATE = 10000000; //in units of 10ns
+    public static float FEATURE_SAMPLE_RATE_BEAT_SYNCHRONOUS_COEFF = 100; //in units of 10ns
     public static final float PRECISION_COEFF_LATTICE = FEATURE_SAMPLE_RATE / 10000000;
 
 
@@ -158,16 +161,19 @@ public class ChordHTKParser {
             BeatStructure beatStructure = BeatStructure.getBeatStructure(beatLabelsSource.getFilePathForSong(cs.getSongName()));
 
             double duration = getSongDuration(chordLabelSource, cs.getSongName());
-            beatStructure.addTrailingBeats(duration);
+            beatStructure.fixBeatStructure(duration);
+
             double[] beats = beatStructure.getBeats();
-            if(cs.getChordSegments().size() != beats.length - 1){
-                logger.error(String.format("for song %s there is only %d beats for %d chords", cs.getSongName(), beats.length, cs.getChordSegments().size()));
-                continue;
-            }
+//            if(cs.getChordSegments().size() != beats.length - 1){
+//                logger.error(String.format("for song %s there is only %d beats for %d chords", cs.getSongName(), beats.length, cs.getChordSegments().size()));
+//                continue;
+//            }
             for (int i = 0; i < cs.getChordSegments().size(); i++) {
                 ChordSegment chordSegment = cs.getChordSegments().get(i);
-                chordSegment.setOnset(beats[i]);
-                chordSegment.setOffset(beats[i + 1]);
+                int startBeatIndex = (int)(chordSegment.getOnset() * FEATURE_SAMPLE_RATE_BEAT_SYNCHRONOUS_COEFF);
+                int endBeatIndex = (int)(chordSegment.getOffset()* FEATURE_SAMPLE_RATE_BEAT_SYNCHRONOUS_COEFF);
+                chordSegment.setOnset(beats[startBeatIndex]);
+                chordSegment.setOffset(beats[endBeatIndex]);
             }
         }
     }
@@ -181,7 +187,7 @@ public class ChordHTKParser {
         for (ChordStructure cs : results) {
             BeatStructure beatStructure = BeatStructure.getBeatStructure(beatLabelsSource.getFilePathForSong(cs.getSongName()));
             double duration = getSongDuration(chordLabelSource, cs.getSongName());
-            beatStructure.addTrailingBeats(duration);
+            beatStructure.fixBeatStructure(duration);
             double[] beats = beatStructure.getBeats();
 
             for (int i = 0; i < cs.getChordSegments().size(); i++) {

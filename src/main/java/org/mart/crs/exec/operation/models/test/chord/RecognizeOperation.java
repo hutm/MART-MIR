@@ -72,6 +72,7 @@ public class RecognizeOperation extends AbstractCRSOperation {
 
     protected int gaussianNumber;
     protected float penalty;
+    protected int interationInHEREST;
 
     protected boolean isToOutputLattices;
 
@@ -100,6 +101,7 @@ public class RecognizeOperation extends AbstractCRSOperation {
 
         this.gaussianNumber = execParams.gaussianNumber;
         this.penalty = execParams.penalty;
+        this.interationInHEREST = execParams.interationInHEREST;
 
 
         gramFilePath = String.format("%s/%s", tempDirPath, GRAM_FILE);
@@ -117,7 +119,11 @@ public class RecognizeOperation extends AbstractCRSOperation {
 
     public void operate() {
         String outFilePath = decodedOutPath + String.format("%d_%2.1f", gaussianNumber, penalty);
-        hvite(trainedModelsDir, hmmFolder + "_" + gaussianNumber, penalty, outFilePath);
+        if (execParams.recognizeAtEachIteration) {
+            hvite(trainedModelsDir, hmmFolder + "_" + gaussianNumber + "_" + interationInHEREST, penalty, outFilePath);
+        } else {
+            hvite(trainedModelsDir, hmmFolder + "_" + gaussianNumber, penalty, outFilePath);
+        }
         String recognizedFolder = resultsDir + File.separator + "-";
 
 //        ChordHTKParser parser = new ChordHTKParser(outFilePath, recognizedFolder);

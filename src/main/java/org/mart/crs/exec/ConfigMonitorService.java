@@ -131,7 +131,7 @@ public class ConfigMonitorService {
                         if (System.getProperty("os.name").contains("Windows")) {
                             specialSeparator = "\\/";
                         }
-                        String cmd = String.format("java -Xmx%s -Djava.library.path=/home/khadkevich/usr/local/lib -DoutPathExternal=%s%s -Dfold=%d -jar ./%s/mart-mir-1.0-SNAPSHOT.jar -c %s", finalMemorySize, outPathForThisConfig, specialSeparator, finalI, newLibsDirName, destConfig);
+                        String cmd = String.format("java -Xmx%s -Djava.library.path=/home/khadkevich/usr/local/lib -DoutPathExternal=%s%s -Dfold=%d -jar ./%s/mart-mir-1.0.jar -c %s", finalMemorySize, outPathForThisConfig, specialSeparator, finalI, newLibsDirName, destConfig);
                         Helper.execCmd(cmd);
                     } catch (Exception e) {
                         logger.error(Helper.getStackTrace(e));

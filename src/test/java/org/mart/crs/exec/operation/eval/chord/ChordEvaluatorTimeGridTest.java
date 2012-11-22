@@ -145,5 +145,33 @@ public class ChordEvaluatorTimeGridTest {
 
 
 
+    @Test(groups = {"static"})
+    public void testEvaluateChordsCC(){
+        Settings.initialize();
+        ChordEvaluatorTimeGrid chordEvaluatorTimeGrid = new ChordEvaluatorTimeGrid();
+        chordEvaluatorTimeGrid.initializeDirectories("/home/hut/work/TEST_CC/test1nnls", "/home/hut/mirdata/mirex2012chords/chordLab", "/home/hut/work/TEST_CC/test1nnls.txt");
+        chordEvaluatorTimeGrid.evaluate();
+    }
+
+
+    @Test(groups = {"static"})
+    public void testEvaluateChordsSimpleChords(){
+        Settings.initialize();
+        ChordEvaluatorTimeGrid chordEvaluatorTimeGrid = new ChordEvaluatorTimeGrid();
+        chordEvaluatorTimeGrid.initializeDirectories("/home/hut/temp/recognizedSimpleChords", "/home/hut/mirdata/chords/labels", "/home/hut/temp/recognizedSimpleChords.txt");
+        chordEvaluatorTimeGrid.evaluate();
+    }
+
+    @Test(groups = {"static"})
+    public void testEvaluateChordsSimpleChordsH5(){
+        Settings.initialize();
+        ChordEvaluator chordEvaluator = new ChordEvaluatorNema();
+        chordEvaluator.initializeDirectories("/home/hut/temp/chordsh5", "/home/hut/mirdata/chords/labels", "/home/hut/temp/chordsh5.txt");
+        chordEvaluator.evaluate();
+    }
+
+
+
+
 
 }

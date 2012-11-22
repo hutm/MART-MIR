@@ -32,6 +32,7 @@ import org.mart.crs.utils.helper.HelperArrays;
 import org.mart.crs.utils.helper.HelperFile;
 
 import java.io.*;
+import java.util.List;
 
 import static org.mart.crs.config.Extensions.CHROMA_EXT;
 import static org.mart.crs.config.Settings.EXECUTABLE_EXTENSION;
@@ -44,7 +45,8 @@ import static org.mart.crs.utils.helper.HelperFile.*;
  */
 public class TrainingAcousticModelsOperation extends AbstractCRSOperation {
 
-    public static final int numberOfIterationsHERest = 6;
+    protected int numberOfIterationsHERest;
+    protected boolean useHINIT;
 
     protected String trainedModelsDir;
     protected String extractedFeaturesDir;
@@ -65,6 +67,7 @@ public class TrainingAcousticModelsOperation extends AbstractCRSOperation {
 
     public TrainingAcousticModelsOperation(StageParameters stageParameters, ExecParams execParams) {
         super(stageParameters, execParams);
+        numberOfIterationsHERest = execParams.numberOfIterationsHERest;
         fileNameTail = "";
 
         TrainModelsStage trainModelsStage = (TrainModelsStage) stageParameters.getStage(TrainModelsStage.class);
@@ -117,12 +120,31 @@ public class TrainingAcousticModelsOperation extends AbstractCRSOperation {
         }
 
         logger.info("Initializing models...");
-        command = String.format("HCompV%s -C %s -f 0.01 -m -S %s  -M %s0 %s",
-                EXECUTABLE_EXTENSION, configPath,
-                featureFileListTrain, hmmDirPath + File.separator + hmmFolder, prototypePath);
-        Helper.execCmd(command);
+        if (!useHINIT) {
+            command = String.format("HCompV%s -C %s -f 0.01 -m -S %s  -M %s0 %s",
+                    EXECUTABLE_EXTENSION, configPath,
+                    featureFileListTrain, hmmDirPath + File.separator + hmmFolder, prototypePath);
+            Helper.execCmd(command);
+            createHmmDefs(modelsArray, append);
 
-        createHmmDefs(modelsArray, append);
+        } else{
+            command = String.format("HCompV%s -C %s -f 0.01 -m -S %s  -M %s0 %s",
+                    EXECUTABLE_EXTENSION, configPath,
+                    featureFileListTrain, hmmDirPath + File.separator + hmmFolder, prototypePath);
+            Helper.execCmd(command);
+
+            for (String modelName:modelsArray) {
+                command = String.format("HInit%s -T 1 -C %s -S %s -M %s0 -I %s -l %s %s",
+                        EXECUTABLE_EXTENSION, configPath,
+                        featureFileListTrain, hmmDirPath + File.separator + hmmFolder, mlfFilePath, modelName, prototypePath);
+                Helper.execCmd(command);
+
+                String prefix = hmmDirPath + File.separator + hmmFolder + "0" + File.separator;
+                HelperFile.copyFile(prefix + "proto", prefix + "proto" + modelName);
+            }
+            createHmmDefsHInit(modelsArray, append);
+        }
+
     }
 
     public void operate() {
@@ -161,6 +183,12 @@ public class TrainingAcousticModelsOperation extends AbstractCRSOperation {
                         hmmDirPath + File.separator + hmmFolder + i + File.separator + hmmDefs,
                         hmmDirPath + File.separator + hmmFolder + (i + 1), wordListTrainPath);
                 Helper.execCmd(command);
+                if (execParams.recognizeAtEachIteration) {
+                    copyDirectory(getFile(hmmDirPath + File.separator + hmmFolder + (i+1)), getFile(trainedModelsDir + File.separator + hmmFolder + "_" + g + "_" + i));
+                    String hmmFilePath = trainedModelsDir + File.separator + hmmFolder + "_" + g + "_" + i + File.separator + hmmDefs;
+                    HMMPopulator.populate(hmmFilePath);
+
+                }
             }
 
             //Now copy models to hmm0
@@ -176,9 +204,9 @@ public class TrainingAcousticModelsOperation extends AbstractCRSOperation {
 
 
             //Now perform circular rotation to obtain all the models from the trained one
-            if(Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT) || Settings.useFrameLevelTranscript){
-                HMMPopulator.transformTransitionMatrixRemovingAllSelfTransitions(hmmFilePath);
-            }
+//            if(Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT) || Settings.useFrameLevelTranscript){
+//                HMMPopulator.transformTransitionMatrixRemovingAllSelfTransitions(hmmFilePath);
+//            }
             if (Settings.operationType.equals(OperationType.CHORD_OPERATION) || Settings.operationType.equals(OperationType.CHORD_OPERATION_PER_BEAT) || Settings.operationType.equals(OperationType.KEY_OPERATION) || Settings.operationType.equals(OperationType.CHORD_OPERATION_BEAT_SEGMENT_BASED) || Settings.operationType.equals(OperationType.CHORD_OPERATION_SEGMENT_BASED)) {
                 HMMPopulator.populate(hmmFilePath);
             }
@@ -320,6 +348,68 @@ public class TrainingAcousticModelsOperation extends AbstractCRSOperation {
 
             for (String chord : chordArrayForTrain) {
                 writerHmmdefs.write("~h \"" + chord + "\"\n");
+                writerHmmdefs.write(hmmRest.toString());
+            }
+            writerHmmdefs.close();
+
+        } catch (IOException e) {
+            logger.error("There is a problem with IO");
+            logger.error(Helper.getStackTrace(e));
+        }
+    }
+
+    protected void createHmmDefsHInit(String[] chordArrayForTrain, boolean append) {
+        try {
+            BufferedReader readerProto = new BufferedReader(new FileReader(hmmDirPath + File.separator + hmmFolder + 0 + File.separator + PROTOTYPE));
+            BufferedReader readerVFloors = new BufferedReader(new FileReader(hmmDirPath + File.separator + hmmFolder + 0 + File.separator + "vFloors"));
+            FileWriter writerMacros = new FileWriter(hmmDirPath + File.separator + hmmFolder + 0 + File.separator + macros);
+            FileWriter writerHmmdefs = new FileWriter(hmmDirPath + File.separator + hmmFolder + 0 + File.separator + hmmDefs, append);
+            String lineProto, lineVFloors;
+            while ((lineProto = readerProto.readLine()) != null && lineProto.length() > 1) {
+                if (!lineProto.startsWith("~h")) {
+                    writerMacros.write(lineProto + "\n");
+                    if (!append) {
+                        writerHmmdefs.write(lineProto + "\n");
+                    }
+                } else {
+                    break;
+                }
+            }
+            while ((lineVFloors = readerVFloors.readLine()) != null && lineVFloors.length() > 1) {
+                writerMacros.write(lineVFloors + "\n");
+            }
+            readerVFloors.close();
+            writerMacros.close();
+
+            StringBuilder hmmRest = new StringBuilder();
+            while ((lineProto = readerProto.readLine()) != null && lineProto.length() > 1) {
+                if(lineProto.startsWith("<TRANSP>")){
+                    hmmRest.append(lineProto).append("\n");
+                    break;
+                }
+            }
+            while ((lineProto = readerProto.readLine()) != null && lineProto.length() > 1) {
+                hmmRest.append(lineProto).append("\n");
+            }
+            readerProto.close();
+
+            for (String chord : chordArrayForTrain) {
+                List<String> lines = HelperFile.readLinesFromTextFile(hmmDirPath + File.separator + hmmFolder + 0 + File.separator + "proto" + chord);
+                int i;
+                for(i = 0; i < lines.size(); i ++){
+                    String line = lines.get(i);
+                    if(line.startsWith("~h")){
+                        break;
+                    }
+                }
+                writerHmmdefs.write("~h \"" + chord + "\"\n");
+                for (int j = i + 1; j < lines.size(); j++) {
+                    if (!lines.get(j).startsWith("<TRANSP>")) {
+                        writerHmmdefs.write(lines.get(j)+ "\n");
+                    }    else{
+                        break;
+                    }
+                }
                 writerHmmdefs.write(hmmRest.toString());
             }
             writerHmmdefs.close();
