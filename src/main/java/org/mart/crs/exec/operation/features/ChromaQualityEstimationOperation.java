@@ -41,8 +41,16 @@ public class ChromaQualityEstimationOperation extends Operation {
     protected int[] goodIndeces = new int[]{0, 4, 7, 12, 16, 19, 23, 24, 26, 28, 31};
 //    protected int[] goodIndeces = new int[]{0, 4, 7, 12, 16, 19, 23, 24};
 
-   protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f};
-
+//   protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f, 0.3f};
+//    protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+//    protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 0.6f, 0.6f, 0.6f, 0.3f, 0.3f, 0.3f, 0.16f, 0.16f};
+//    protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 0.6f, 0.6f, 0.6f, 0.3f, 0.3f, 0.3f, 0.33f, 0.33f};
+//    protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 0.6f, 0.6f, 0.6f, 0.6f, 0.6f, 0.6f, 0.6f, 0.6f};
+//    protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 0.16f, 0.16f, 0.16f, 0.16f, 0.16f, 0.16f, 0.16f, 0.16f};
+//    protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 0.5f, 0.5f, 0.5f, 0.25f, 0.25f, 0.25f, 0.125f, 0.125f};
+//    protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 0.5f, 0.5f, 0.5f, 1f, 1f, 1f, 0.5f, 0.5f};
+    protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 0.9f, 0.9f, 0.9f, 0.8f, 0.8f, 0.8f, 0.7f, 0.7f};
+//    protected  float[] goodIndecesWeights = new float[]{1, 1, 1, 0.16f, 0.16f, 0.16f, 0.16f, 0.16f, 0.16f, 0.16f, 0.16f};
 
 
     public ChromaQualityEstimationOperation(String workingDir) {
@@ -108,13 +116,26 @@ public class ChromaQualityEstimationOperation extends Operation {
         System.out.println("cosine2 mean " + cosine2Mean);
         System.out.println("cosine3 mean " + cosine3Mean);
 
+        System.out.println(ratio1Mean);
+        System.out.println( ratio2Mean);
+        System.out.println(ratio3Mean);
+
+        System.out.println(cosine1Mean);
+        System.out.println(cosine2Mean);
+        System.out.println(cosine3Mean);
+
 
     }
 
 
     protected float[] getAveragePCPData(SpectrumImpl spectrum) {
         PCP pcp1 = CoreElementsInitializer.initializePCPWithExecParamsData(PCP.BASIC_ALG, Configuration.REFERENCE_FREQUENCY, _initialExecParameters);
-        pcp1.initSpectrum(spectrum);
+        if (spectrum instanceof ReassignedSpectrum) {
+            pcp1.initReassignedSpectrum((ReassignedSpectrum)spectrum);
+        } else{
+            pcp1.initSpectrum(spectrum);
+        }
+
         float[][] pcpUnwrapped = pcp1.getPCPUnwrapped();
         return HelperArrays.average(pcpUnwrapped, 0, pcpUnwrapped.length);
     }
@@ -160,7 +181,7 @@ public class ChromaQualityEstimationOperation extends Operation {
     }
 
     public static void main(String[] args) {
-        ChromaQualityEstimationOperation operation = new ChromaQualityEstimationOperation("d:\\work\\notesCmaj\\onlyCMajChords");
+        ChromaQualityEstimationOperation operation = new ChromaQualityEstimationOperation("/home/hut/PhD/data/our/iowa/onlyCMaj");
         operation.initialize();
         operation.operate();
     }
