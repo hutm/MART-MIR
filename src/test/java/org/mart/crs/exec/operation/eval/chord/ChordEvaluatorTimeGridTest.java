@@ -148,9 +148,9 @@ public class ChordEvaluatorTimeGridTest {
     @Test(groups = {"static"})
     public void testEvaluateChordsCC(){
         Settings.initialize();
-        ChordEvaluatorTimeGrid chordEvaluatorTimeGrid = new ChordEvaluatorTimeGrid();
-        chordEvaluatorTimeGrid.initializeDirectories("/home/hut/work/TEST_CC/test1nnls", "/home/hut/mirdata/mirex2012chords/chordLab", "/home/hut/work/TEST_CC/test1nnls.txt");
-        chordEvaluatorTimeGrid.evaluate();
+        ChordEvaluatorNema chordEvaluator = new ChordEvaluatorNema();
+        chordEvaluator.initializeDirectories("/home/hut/work/TEST_CC/refactoring", "/home/hut/mirdata/mirex2012chords/chordLab", "/home/hut/work/TEST_CC/refactoring.txt");
+        chordEvaluator.evaluate();
     }
 
 
