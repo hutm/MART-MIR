@@ -69,7 +69,7 @@ public class GroundTruthCreator extends Operation {
 //        creator.initialize();
 //        creator.operate();
 
-        GroundTruthCreator creator1 = new GroundTruthCreator("d:\\work\\notes");
+        GroundTruthCreator creator1 = new GroundTruthCreator("d:\\work\\noteStrings");
         creator1.initialize();
         creator1.operate();
     }

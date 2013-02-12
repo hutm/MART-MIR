@@ -57,20 +57,20 @@ public class NoteMixerOnlyCMajCMin extends NoteMixer {
 //        int chordNumber = (int) Math.round(Math.random()) * 12;                                      //TODO refactor notesFromRandomChord
 //
 //        String chordName = LabelsParser.getChordForNumber(String.valueOf(chordNumber));
-//        int[] notes = new int[3];
-//        notes[0] = chordNumber % 12;
+//        int[] noteStrings = new int[3];
+//        noteStrings[0] = chordNumber % 12;
 //        if (chordNumber < 12) {
-//            notes[1] = (chordNumber + 4) % 12;
+//            noteStrings[1] = (chordNumber + 4) % 12;
 //        } else {
-//            notes[1] = (chordNumber + 3) % 12;
+//            noteStrings[1] = (chordNumber + 3) % 12;
 //        }
-//        notes[2] = (chordNumber + 7) % 12;
+//        noteStrings[2] = (chordNumber + 7) % 12;
 //
 //
 //        String[] fileNamesToMix = new String[3];
 //        for (int i = 0; i < fileNamesToMix.length; i++) {
-//            int index = (int) Math.round(Math.random() * (noteFiles.get(notes[i] + 60).size() - 1));
-//            fileNamesToMix[i] = noteFiles.get(notes[i] + 60).get(index);
+//            int index = (int) Math.round(Math.random() * (noteFiles.get(noteStrings[i] + 60).size() - 1));
+//            fileNamesToMix[i] = noteFiles.get(noteStrings[i] + 60).get(index);
 //
 //        }
 //        mixFilesAndSave(fileNamesToMix, chordName);
