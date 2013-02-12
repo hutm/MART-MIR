@@ -73,6 +73,8 @@ public class Settings {
     public static boolean isMIREX;
     public static boolean isQUAERO;
 
+    public static boolean isToUSEPCPLogTransform;
+    public static boolean isToUSESpectralLogTransform;
 
     //-----------------------initialization part---------------------------
 

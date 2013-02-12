@@ -17,6 +17,7 @@
 package org.mart.crs.management.features.extractor;
 
 import org.mart.crs.config.ExecParams;
+import org.mart.crs.config.Settings;
 import org.mart.crs.core.AudioReader;
 import org.mart.crs.core.pcp.PCP;
 import org.mart.crs.management.features.manager.FeaturesManagerChord;
@@ -88,7 +89,7 @@ public abstract class FeaturesExtractorHTK {
             List<float[][]> newGlobalVectors = new ArrayList<float[][]>();
             for (float[][] globalVector : globalVectors) {
                 if (execParams.isToNormalizeFeatureVectors) {
-                    newGlobalVectors.add(HelperArrays.normalizeVectors(globalVector));
+                    newGlobalVectors.add(HelperArrays.normalizeVectors(globalVector, Settings.isToUSEPCPLogTransform || Settings.isToUSESpectralLogTransform));
                 } else {
                     newGlobalVectors.add(globalVector);
                 }
@@ -106,15 +107,11 @@ public abstract class FeaturesExtractorHTK {
 
         int startIndex = FeaturesManagerChord.getIndexForTimeInstant(startTime, execParams);
         int endIndex = FeaturesManagerChord.getIndexForTimeInstant(endTime, execParams);
-//        if (startIndex >= globalVector.get(0).length) {
-//            startIndex = globalVector.get(0).length - 2;
-//        }
+
         if (endIndex >= globalVector.get(0).length) {
             endIndex = globalVector.get(0).length - 1;
         }
-//        if(startIndex == endIndex){
-//            endIndex ++;
-//        }
+
 
         for (float[][] aGlobalVector : globalVectors) {
             if (startIndex >= endIndex) {
