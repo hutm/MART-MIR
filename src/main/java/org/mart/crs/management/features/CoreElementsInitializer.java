@@ -17,6 +17,7 @@
 package org.mart.crs.management.features;
 
 import org.mart.crs.config.ExecParams;
+import org.mart.crs.config.Settings;
 import org.mart.crs.core.pcp.PCP;
 import org.mart.crs.core.spectrum.SpectrumImpl;
 import org.mart.crs.core.spectrum.reassigned.ReassignedSpectrum;
@@ -26,23 +27,30 @@ import org.mart.crs.management.features.extractor.SpectrogramType;
 
 /**
  * Performs initialization of core elements, such as Spectrum and Chroma using ExecParams configuration
+ *
  * @version 1.0 3/30/12 6:27 PM
  * @author: Hut
  */
 public class CoreElementsInitializer {
 
-    public static PCP initializePCPWithExecParamsData(int pcpType, double refFrequency, ExecParams execParams){
-           return PCP.getPCP(PCP.BASIC_ALG, refFrequency, execParams.pcpAveragingFactor, execParams.numberOfSemitonesPerBin, execParams.isToNormalizeFeatureVectors, execParams.startMidiNote, execParams.endMidiNote, execParams.spectrumMagnitudeRateForChromaCalculation);
+    public static PCP initializePCPWithExecParamsData(int pcpType, double refFrequency, ExecParams execParams) {
+        PCP pcp = PCP.getPCP(PCP.BASIC_ALG, refFrequency, execParams.pcpAveragingFactor, execParams.numberOfSemitonesPerBin, execParams.isToNormalizeFeatureVectors, execParams.startMidiNote, execParams.endMidiNote, execParams.spectrumMagnitudeRateForChromaCalculation);
+        pcp.setToUSEPCPLogTransform(Settings.isToUSEPCPLogTransform);
+        pcp.setToUSESpectralLogTransform(Settings.isToUSESpectralLogTransform);
+        return pcp;
     }
 
-    public static PCP initializeBassPCPWithExecParamsData(int pcpType, double refFrequency, ExecParams execParams){
-        return PCP.getPCP(PCP.BASIC_ALG, refFrequency, execParams.pcpAveragingFactor, execParams.numberOfSemitonesPerBin, execParams.isToNormalizeFeatureVectors, execParams.startMidiNoteBass, execParams.endMidiNoteBass, execParams.spectrumMagnitudeRateForChromaCalculation);
+    public static PCP initializeBassPCPWithExecParamsData(int pcpType, double refFrequency, ExecParams execParams) {
+        PCP pcp = PCP.getPCP(PCP.BASIC_ALG, refFrequency, execParams.pcpAveragingFactor, execParams.numberOfSemitonesPerBin, execParams.isToNormalizeFeatureVectors, execParams.startMidiNoteBass, execParams.endMidiNoteBass, execParams.spectrumMagnitudeRateForChromaCalculation);
+        pcp.setToUSEPCPLogTransform(Settings.isToUSEPCPLogTransform);
+        pcp.setToUSESpectralLogTransform(Settings.isToUSESpectralLogTransform);
+        return pcp;
     }
 
 
-    public static SpectrumImpl initializeSpectrumWithExecParamsData(SpectrogramType spectrogramType, float[] samples, float sampleRate, ExecParams execParams){
-        switch (spectrogramType){
-            case FFT_BASED :
+    public static SpectrumImpl initializeSpectrumWithExecParamsData(SpectrogramType spectrogramType, float[] samples, float sampleRate, ExecParams execParams) {
+        switch (spectrogramType) {
+            case FFT_BASED:
                 return new SpectrumImpl(samples, sampleRate, execParams.windowLength, execParams.windowType, execParams.overlapping);
             case STANDARD:
                 return new ReassignedSpectrum(samples, sampleRate, execParams.windowLength, execParams.windowType, execParams.overlapping);

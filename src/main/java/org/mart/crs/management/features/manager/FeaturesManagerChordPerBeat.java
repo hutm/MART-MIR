@@ -18,6 +18,7 @@ package org.mart.crs.management.features.manager;
 
 import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Extensions;
+import org.mart.crs.config.Settings;
 import org.mart.crs.management.beat.BeatStructure;
 import org.mart.crs.management.beat.segment.BeatSegment;
 import org.mart.crs.management.config.Configuration;
@@ -69,7 +70,11 @@ public class FeaturesManagerChordPerBeat extends FeaturesManagerChord {
 
                 float[][] feature = featuresExtractor.extractFeatures(beatSegment.getTimeInstant(), beatSegment.getNextBeatTimeInstant(), refFrequency, Root.C);
                 float[] averageValue = HelperArrays.average(feature, 0, feature.length);
-                averageValue = HelperArrays.normalizeVector(averageValue);
+                if (!Settings.isToUSEPCPLogTransform) {
+                    averageValue = HelperArrays.normalizeVector(averageValue);
+                } else{
+                    averageValue = HelperArrays.normalizeVectorMaxMin(averageValue);
+                }
                 if(averageValue == null || averageValue.length == 0){  //If beat segment is too short returned vector is of zero size
                     averageValue = new float[featuresExtractor.getVectorSize()];
                 }
@@ -225,11 +230,11 @@ public class FeaturesManagerChordPerBeat extends FeaturesManagerChord {
         ChordSegment curSegment = null;
         try {
             curSegment = intersectionchords.lastEntry().getValue();
-            return tempSegmentWithBeatDuration;
+            return new ChordSegment(beatSegment.getTimeInstant(), beatSegment.getNextBeatTimeInstant(), curSegment.getChordName());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ChordSegment(beatSegment.getTimeInstant(), beatSegment.getNextBeatTimeInstant(), curSegment.getChordName());
+        return tempSegmentWithBeatDuration;
     }
 
 }
