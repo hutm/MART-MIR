@@ -53,7 +53,7 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
 
     protected static Logger logger = CRSLogger.getLogger(ChordEvaluator.class);
 
-    public static final boolean NEMA_BASED_EVALUATION = true;
+    public static final boolean NEMA_BASED_EVALUATION = false;
     public static boolean PERFORM_REFINING_IN_CHORD_HYPOS = false;
     public static int REFINING_IN_CHORD_HYPOS_ORDER = 0;
 
@@ -144,8 +144,8 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
                 }
                 chordList = structure.getChordSegments();
             } else{
-                chordList = LabelsParser.getSegments(song.getAbsolutePath(), true);
-                chordListGT = LabelsParser.getSegments(GTFilePath, true);
+                chordList = new ChordStructure(song.getAbsolutePath()).getChordSegments();
+                chordListGT = new ChordStructure(GTFilePath).getChordSegments();
             }
             chordEvalResults.add(compareLabels(chordList, chordListGT, song.getName()));
         }
@@ -164,15 +164,23 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
         double totalChordsTime = 0;
         double totalKnownChordsTime = 0;
         double correctTime = 0;
-        for (ChordSegment csGT : chordListGT) {   //TODO: needs very careful refactoring... the results are very different from ChordEvaluatiorNemaBased
+        for (ChordSegment csGT : chordListGT) {
             for (ChordSegment cs : chordList) {
                 if (cs.getOnset() < csGT.getOffset()) {
                     if (cs.getOffset() > csGT.getOnset()) {
-                        if (cs.getChordName().equals(csGT.getChordName()) && !csGT.getChordType().equals(NOT_A_CHORD) && !csGT.getChordType().equals(ChordType.UNKNOWN_CHORD)) {
+                        boolean isCorrect = !cs.getChordType().equals(ChordType.UNKNOWN_CHORD) && (cs.getChordType().equals(csGT.getChordType()) || cs.getChordType().equals(csGT.getChordType().getAlternativeInterpretation()) || cs.getChordType().equals(csGT.getChordType().getAlternativeInterpretation().getAlternativeInterpretation()));
+                        if(isCorrect && !(cs.getChordType() == ChordType.NOT_A_CHORD)){
+                            try {
+                                isCorrect = isCorrect && cs.getRoot().equals(csGT.getRoot());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if (isCorrect) {
                             correctTime += (Math.min(cs.getOffset(), csGT.getOffset()) - Math.max(cs.getOnset(), csGT.getOnset()));
                         }
                     }
-                } else break;
+                }
             }
             duration = csGT.getOffset() - csGT.getOnset();
 
@@ -180,11 +188,7 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
             totalChordsTime += duration;
             totalKnownChordsTime += duration;
 
-            if (csGT.getChordType().getName().equals(UNKNOWN_CHORD.getName())) {
-                totalKnownChordsTime -= duration;
-            }
-            if (csGT.getChordType().getName().equals(NOT_A_CHORD.getName())) {
-                totalChordsTime -= duration;
+            if (csGT.getChordType().equals(UNKNOWN_CHORD)) {
                 totalKnownChordsTime -= duration;
             }
         }

@@ -22,6 +22,7 @@ import org.mart.crs.config.Settings;
 import org.mart.crs.exec.operation.eval.AbstractCRSEvaluator;
 import org.mart.crs.exec.operation.eval.chord.ChordEvaluator;
 import org.mart.crs.exec.operation.eval.chord.ChordEvaluatorNema;
+import org.mart.crs.exec.operation.eval.chord.ChordEvaluatorNemaFullDictionary;
 import org.mart.crs.exec.operation.models.test.chord.RecognizeBeatSynchronousOperation;
 import org.mart.crs.exec.operation.models.test.chord.RecognizeConventionalVersionWithLMOperation;
 import org.mart.crs.exec.operation.models.test.chord.RecognizeOperation;
@@ -159,8 +160,8 @@ public class ChordOperationDomain extends OperationDomain {
     public List<AbstractCRSEvaluator> getEvaluators() {
         List<AbstractCRSEvaluator> outList = new ArrayList<AbstractCRSEvaluator>();
         outList.add(new ChordEvaluator());
-//        outList.add(new ChordEvaluatorNema());
-//        outList.add(new ChordEvaluatorNemaFullDictionary());
+        outList.add(new ChordEvaluatorNema());
+        outList.add(new ChordEvaluatorNemaFullDictionary());
         return outList;
     }
 
