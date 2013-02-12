@@ -47,7 +47,7 @@ public class ChordHTKParser {
 
     protected static Logger logger = CRSLogger.getLogger(ChordHTKParser.class);
 
-    public static float FEATURE_SAMPLE_RATE = 10000000; //in units of 10ns
+    public static float FEATURE_SAMPLE_RATE = 1000000; //in units of 10ns
     public static float FEATURE_SAMPLE_RATE_BEAT_SYNCHRONOUS_COEFF = 100; //in units of 10ns
     public static final float PRECISION_COEFF_LATTICE = FEATURE_SAMPLE_RATE / 10000000;
 
