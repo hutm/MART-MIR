@@ -4,7 +4,7 @@
     <groupId>org.mart</groupId>
     <artifactId>mart-mir</artifactId>
     <packaging>jar</packaging>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <name>mart-mir</name>
     <url>http://mart.khadkevich.org</url>
 
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>org.mart</groupId>
             <artifactId>mart-core</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.1</version>
         </dependency>
 
         <dependency>
