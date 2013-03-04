@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mart</groupId>
     <artifactId>mart-mir</artifactId>
     <packaging>jar</packaging>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <name>mart-mir</name>
     <url>http://mart.khadkevich.org</url>
 
@@ -57,7 +56,7 @@
         <dependency>
             <groupId>org.mart</groupId>
             <artifactId>mart-core</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.1</version>
         </dependency>
 
         <dependency>
@@ -127,17 +126,16 @@
                             <tasks>
 
                                 <copy todir="${build.dir}/bin">
-                                    <fileset dir="bin"/>
+                                    <fileset dir="bin" />
                                 </copy>
 
                                 <copy todir="${build.dir}/cfg">
-                                    <fileset dir="cfg"/>
+                                    <fileset dir="cfg" />
                                 </copy>
 
-                                <mkdir dir="${build.dir}/logs"/>
+                                <mkdir dir="${build.dir}/logs" />
 
-                                <copy file="${build.directory}/${name}-${version}.jar"
-                                      todir="${build.dir}/lib"/>
+                                <copy file="${build.directory}/${name}-${version}.jar" todir="${build.dir}/lib" />
 
 
                                 <echo file="${build.dir}/crs.sh">
@@ -218,17 +216,12 @@ java -Xmx200m -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOST
                                     <tasks>
                                         <echo>Uploading jar to server</echo>
 
-                                        <scp
-                                                toDir="${ssh.username}%${ssh.pc}@${ssh.host}:${ssh.dest.dir}"
-                                                password="${ssh.password}"
-                                                trust="yes"
-                                                sftp="true"
-                                                >
+                                        <scp toDir="${ssh.username}%${ssh.pc}@${ssh.host}:${ssh.dest.dir}" password="${ssh.password}" trust="yes" sftp="true">
                                             <fileset dir="${build.dir}/">
-                                                <include name="lib/${myapp.jar.name}"/>
-                                                <!--<include name="cfg/config.cfg"/>-->
-                                                <include name="lib/mart-core-1.0.jar"/>
-                                                <include name="service.sh"/>
+                                                <include name="lib/${myapp.jar.name}" />
+                                                <!--<include name="cfg/config.cfg" />-->
+                                                <include name="lib/mart-core-1.0.jar" />
+                                                <include name="service.sh" />
                                             </fileset>
                                         </scp>
                                     </tasks>
