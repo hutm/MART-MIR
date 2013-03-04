@@ -46,6 +46,11 @@
         </license>
     </licenses>
 
+    <scm>
+        <connection>scm:git:git://github.com/hutm/mart-mir.git</connection>
+        <developerConnection>scm:git:git@github.com:hutm/mart-mir.git</developerConnection>
+        <url>http://github.com/hutm/mart-mir.git</url>
+    </scm>
 
 
     <dependencies>
