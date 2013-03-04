@@ -36,7 +36,6 @@
 
     <properties>
         <myapp.jar.name>${name}-${version}.jar</myapp.jar.name>
-        <external.properties.file>../mart.properties</external.properties.file>
     </properties>
     <licenses>
         <license>
@@ -117,44 +116,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <configuration>
-                            <tasks>
 
-                                <copy todir="${build.dir}/bin">
-                                    <fileset dir="bin" />
-                                </copy>
-
-                                <copy todir="${build.dir}/cfg">
-                                    <fileset dir="cfg" />
-                                </copy>
-
-                                <mkdir dir="${build.dir}/logs" />
-
-                                <copy file="${build.directory}/${name}-${version}.jar" todir="${build.dir}/lib" />
-
-
-                                <echo file="${build.dir}/crs.sh">
-                                    java -Xmx1500m -jar ./lib/${name}-${version}.jar $1 $2 $3 $4 $5 $6 $7 $8 $9
-                                </echo>
-                                <echo file="${build.dir}/service.sh">
-mkdir -p ./libService
-cp -r ./lib/** ./libService/
-java -Xmx200m -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOSTNAME
-                                </echo>
-
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -199,9 +161,51 @@ java -Xmx200m -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOST
 
     <profiles>
         <profile>
-            <id>jar-server-deploy</id>
+            <id>extra-build</id>
+            <properties>
+                <external.properties.file>../mart.properties</external.properties.file>
+            </properties>
             <build>
                 <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <configuration>
+                                    <tasks>
+
+                                        <copy todir="${build.dir}/bin">
+                                            <fileset dir="bin" />
+                                        </copy>
+
+                                        <copy todir="${build.dir}/cfg">
+                                            <fileset dir="cfg" />
+                                        </copy>
+
+                                        <mkdir dir="${build.dir}/logs" />
+
+                                        <copy file="${build.directory}/${name}-${version}.jar" todir="${build.dir}/lib" />
+
+
+                                        <echo file="${build.dir}/crs.sh">
+                                            java -Xmx1500m -jar ./lib/${name}-${version}.jar $1 $2 $3 $4 $5 $6 $7 $8 $9
+                                        </echo>
+                                        <echo file="${build.dir}/service.sh">
+                                            mkdir -p ./libService
+                                            cp -r ./lib/** ./libService/
+                                            java -Xmx200m -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOSTNAME
+                                        </echo>
+
+                                    </tasks>
+                                </configuration>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
