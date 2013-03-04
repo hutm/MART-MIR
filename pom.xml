@@ -4,7 +4,7 @@
     <groupId>org.mart</groupId>
     <artifactId>mart-mir</artifactId>
     <packaging>jar</packaging>
-    <version>0.1</version>
+    <version>0.1-SNAPSHOT</version>
     <name>mart-mir</name>
     <url>http://mart.khadkevich.org</url>
 
@@ -46,9 +46,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/hutm/mart-mir.git</connection>
-        <developerConnection>scm:git:git@github.com:hutm/mart-mir.git</developerConnection>
-        <url>http://github.com/hutm/mart-mir.git</url>
+        <connection>scm:git:git://github.com/hutm/MART-MIR.git</connection>
+        <developerConnection>scm:git:git@github.com:hutm/MART-MIR.git</developerConnection>
+        <url>http://github.com/hutm/MART-MIR.git</url>
     </scm>
 
 
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.mart</groupId>
             <artifactId>mart-core</artifactId>
-            <version>0.1</version>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
