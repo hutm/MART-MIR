@@ -91,6 +91,7 @@ public class RecognizeBeatOperation extends RecognizeOnsetOperation {
 //        command = command + " -f "; //todo
         if (Settings.isToUseBigramDuringHVite) {
             command = command + " -w " + netHViteFilePath;
+//            command = command + " -w " + netFilePath;  //TODO use just one language model instead of two different files
         } else {
             command = command + " -w " + netFilePath;
         }
