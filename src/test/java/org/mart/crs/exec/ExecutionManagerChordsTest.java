@@ -69,9 +69,9 @@ public class ExecutionManagerChordsTest {
         List<String> lines = HelperFile.readLinesFromTextFile(resultsFilePath);
         Assert.assertTrue(lines != null && lines.size() > 0);
         String lastLine = lines.get(lines.size() - 1);
-        String score = lastLine.substring(lastLine.lastIndexOf("0."), lastLine.lastIndexOf(","));
+        String score = lastLine.substring(lastLine.lastIndexOf("0."), lastLine.lastIndexOf("0.") + 4);
         float scoreFloat = Helper.parseFloat(score);
-        Assert.assertTrue(scoreFloat > 0.9);
+        Assert.assertTrue(scoreFloat >= 0.9);
     }
 
 
