@@ -29,12 +29,15 @@ import org.mart.crs.utils.helper.HelperFile;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mart.crs.config.Settings.numberOfFolds;
 import static org.mart.crs.config.Settings.readProperties;
 
 
 public class ExecutionManager {
 
     protected static Logger logger = CRSLogger.getLogger(ExecutionManager.class);
+
+    public static  boolean multiFold;
 
     public static final String scenarioPackage = "org.mart.crs.exec.scenario.";
 
@@ -43,25 +46,27 @@ public class ExecutionManager {
         ConfigSettings.outPathExternal = System.getProperty("outPathExternal");
 
         parseArgs(args);
-        String scenarioClass = scenarioPackage + Settings.scenario;
-        try {
-            Class.forName(scenarioClass).newInstance();
-        } catch (ClassNotFoundException e) {
-            logger.error(String.format("Error instantiating scenario class %s", scenarioClass));
-            logger.error(Helper.getStackTrace(e));
-        } catch (InstantiationException e) {
-            logger.error(String.format("Error instantiating scenario class %s", scenarioClass));
-            logger.error(Helper.getStackTrace(e));
-        } catch (IllegalAccessException e) {
-            logger.error(String.format("Error instantiating scenario class %s", scenarioClass));
-            logger.error(Helper.getStackTrace(e));
-        } catch (Exception e) {
-            logger.error(String.format("Error running scenario class %s", scenarioClass));
-            logger.error(Helper.getStackTrace(e));
-        } catch (Throwable e) {
-            logger.error(String.format("Error running scenario class %s", scenarioClass));
-            logger.error(Helper.getStackTrace(e));
-            System.exit(1);
+        if (!multiFold) {  //otherwise it is already executed in parallel threads
+            String scenarioClass = scenarioPackage + Settings.scenario;
+            try {
+                Class.forName(scenarioClass).newInstance();
+            } catch (ClassNotFoundException e) {
+                logger.error(String.format("Error instantiating scenario class %s", scenarioClass));
+                logger.error(Helper.getStackTrace(e));
+            } catch (InstantiationException e) {
+                logger.error(String.format("Error instantiating scenario class %s", scenarioClass));
+                logger.error(Helper.getStackTrace(e));
+            } catch (IllegalAccessException e) {
+                logger.error(String.format("Error instantiating scenario class %s", scenarioClass));
+                logger.error(Helper.getStackTrace(e));
+            } catch (Exception e) {
+                logger.error(String.format("Error running scenario class %s", scenarioClass));
+                logger.error(Helper.getStackTrace(e));
+            } catch (Throwable e) {
+                logger.error(String.format("Error running scenario class %s", scenarioClass));
+                logger.error(Helper.getStackTrace(e));
+                System.exit(1);
+            }
         }
     }
 
@@ -78,6 +83,21 @@ public class ExecutionManager {
                         ConfigSettings.CONFIG_FILE_PATH = args[++i];
                         logger.info("Using config file " + ConfigSettings.CONFIG_FILE_PATH);
                         readProperties(ConfigSettings.CONFIG_FILE_PATH);
+                        break;
+                    case 'l':
+                        ConfigSettings.CONFIG_FILE_PATH = args[++i];
+                        logger.info("Using config file " + ConfigSettings.CONFIG_FILE_PATH);
+                        readProperties(ConfigSettings.CONFIG_FILE_PATH);
+                        multiFold = true;
+                        for (int folds = 0; folds < numberOfFolds; folds++) {
+                            final int finalFolds = folds;
+                            (new Thread(new Runnable() {
+                                public void run() {
+                                    String cmd = String.format("java -Xmx1600m -Dfold=%d -jar ./lib/mart-mir-0.2-SNAPSHOT.jar -c %s", finalFolds,  ConfigSettings.CONFIG_FILE_PATH);
+                                    Helper.execCmd(cmd);
+                                }
+                            })).start();
+                        }
                         break;
 
                     case 'm':
