@@ -122,13 +122,56 @@
             </plugin>
 
 
+
+
+
         </plugins>
     </build>
+
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.5</version>
+                <reportSets>
+                    <reportSet>
+                        <id>html</id>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <!--<reportSet>-->
+                        <!--<id>doccheck</id>-->
+                        <!--<configuration>-->
+                            <!--<name>DocCheck</name>-->
+                            <!--<description>DocCheck documentation</description>-->
+                            <!--<doclet>com.sun.tools.doclets.doccheck.DocCheck</doclet>-->
+                            <!--<docletArtifact>-->
+                                <!--<groupId>com.sun.tools.doclets</groupId>-->
+                                <!--<artifactId>doccheck</artifactId>-->
+                                <!--<version>1.2b2</version>-->
+                            <!--</docletArtifact>-->
+                            <!--<destDir>doccheck</destDir>-->
+                        <!--</configuration>-->
+                        <!--<reports>-->
+                            <!--<report>javadoc</report>-->
+                        <!--</reports>-->
+                    <!--</reportSet>-->
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
 
 
     <profiles>
         <profile>
             <id>extra-build</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <external.properties.file>../mart.properties</external.properties.file>
             </properties>
@@ -164,7 +207,7 @@
                                     <goal>copy-dependencies</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${build.dir}/lib</outputDirectory>
+                                    <outputDirectory>${build.dir.mart.mir}/lib</outputDirectory>
                                 </configuration>
                             </execution>
                         </executions>
@@ -179,26 +222,26 @@
                                 <configuration>
                                     <tasks>
 
-                                        <copy todir="${build.dir}/bin">
+                                        <copy todir="${build.dir.mart.mir}/bin">
                                             <fileset dir="bin" />
                                         </copy>
 
-                                        <copy todir="${build.dir}/cfg">
+                                        <copy todir="${build.dir.mart.mir}/cfg">
                                             <fileset dir="cfg" />
                                         </copy>
 
-                                        <mkdir dir="${build.dir}/logs" />
+                                        <mkdir dir="${build.dir.mart.mir}/logs" />
 
-                                        <copy file="${build.directory}/${name}-${version}.jar" todir="${build.dir}/lib" />
+                                        <copy file="${build.directory}/${name}-${version}.jar" todir="${build.dir.mart.mir}/lib" />
 
 
-                                        <echo file="${build.dir}/crs.sh">
+                                        <echo file="${build.dir.mart.mir}/crs.sh">
                                             java -Xmx1500m -jar ./lib/${name}-${version}.jar $1 $2 $3 $4 $5 $6 $7 $8 $9
                                         </echo>
-                                        <echo file="${build.dir}/service.sh">
-                                            mkdir -p ./libService
-                                            cp -r ./lib/** ./libService/
-                                            java -Xmx200m -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOSTNAME
+                                        <echo file="${build.dir.mart.mir}/service.sh">
+mkdir -p ./libService
+cp -r ./lib/** ./libService/
+java -Xmx200m -jar ./libService/${name}-${version}.jar -s $HOME/nfs/chords/$HOSTNAME
                                         </echo>
 
                                     </tasks>
@@ -208,51 +251,107 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>
-
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>ssh-upload</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <tasks>
-                                        <echo>Uploading jar to server</echo>
-
-                                        <scp toDir="${ssh.username}%${ssh.pc}@${ssh.host}:${ssh.dest.dir}" password="${ssh.password}" trust="yes" sftp="true">
-                                            <fileset dir="${build.dir}/">
-                                                <include name="lib/${myapp.jar.name}" />
-                                                <!--<include name="cfg/config.cfg" />-->
-                                                <include name="lib/mart-core-1.0.jar" />
-                                                <include name="service.sh" />
-                                            </fileset>
-                                        </scp>
-                                    </tasks>
-                                </configuration>
-                            </execution>
-                        </executions>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.apache.ant</groupId>
-                                <artifactId>ant-jsch</artifactId>
-                                <version>1.7.0</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>com.jcraft</groupId>
-                                <artifactId>jsch</artifactId>
-                                <version>0.1.42</version>
-                            </dependency>
-                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+
+
+        <profile>
+        <id>ssh-server-upload</id>
+        <properties>
+            <external.properties.file>../mart.properties</external.properties.file>
+        </properties>
+        <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-1</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${external.properties.file}</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>ssh-upload</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <echo>Uploading jar to server</echo>
+
+                                <scp toDir="${ssh.username}%${ssh.pc}@${ssh.host}:${ssh.dest.dir}" password="${ssh.password}" trust="yes" sftp="true">
+                                    <fileset dir="${build.dir.mart.mir}/">
+                                        <include name="lib/${myapp.jar.name}" />
+                                        <!--<include name="cfg/config.cfg" />-->
+                                        <include name="lib/mart-core-1.0.jar" />
+                                        <include name="service.sh" />
+                                    </fileset>
+                                </scp>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.ant</groupId>
+                        <artifactId>ant-jsch</artifactId>
+                        <version>1.7.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.jcraft</groupId>
+                        <artifactId>jsch</artifactId>
+                        <version>0.1.42</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+        </build>
 
         </profile>
+
+
+        <profile>
+            <id>graph</id>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>mvnplugins.fusesource.org</id>
+                    <url>http://mvnplugins.fusesource.org/repo/release</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                </pluginRepository>
+            </pluginRepositories>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.fusesource.mvnplugins</groupId>
+                        <artifactId>maven-graph-plugin</artifactId>
+                        <version>1.0</version>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
+
 
 
     </profiles>
