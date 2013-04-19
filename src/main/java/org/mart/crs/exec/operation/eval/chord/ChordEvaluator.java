@@ -53,7 +53,7 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
 
     protected static Logger logger = CRSLogger.getLogger(ChordEvaluator.class);
 
-    public static final boolean NEMA_BASED_EVALUATION = false;
+    public static boolean NEMA_BASED_EVALUATION = false;
     public static boolean PERFORM_REFINING_IN_CHORD_HYPOS = false;
     public static int REFINING_IN_CHORD_HYPOS_ORDER = 0;
 
@@ -96,6 +96,11 @@ public class ChordEvaluator extends AbstractCRSEvaluator {
 
         outputDirectory = getFile(HelperFile.getFilePathWithoutExtension(this.outTxtFile.replace(Extensions.TXT_EXT, "")));
         outputDirectory.mkdirs();
+    }
+
+    public void initializeDirectories(String recognizedDirPath, String groundTruthFolder) {
+        String filePrefix = recognizedDirPath.charAt(recognizedDirPath.length()-1) == '/' ? recognizedDirPath.substring(0, recognizedDirPath.length()-1) : recognizedDirPath;
+        initializeDirectories(recognizedDirPath, groundTruthFolder, filePrefix + ".txt");
     }
 
 

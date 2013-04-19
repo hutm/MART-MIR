@@ -18,6 +18,7 @@ package org.mart.crs.exec.operation.eval.chord;
 
 import org.imirsel.nema.model.NemaChord;
 import org.imirsel.nema.model.util.ChordConversionUtil;
+import org.mart.crs.config.Settings;
 import org.mart.crs.management.label.chord.ChordSegment;
 
 import java.util.List;
@@ -113,6 +114,15 @@ public class ChordEvaluatorTimeGrid extends ChordEvaluator {
             }
         }
         return false;
+    }
+
+
+
+    public static void main(String args[]){
+        Settings.initialize();
+        ChordEvaluatorTimeGrid chordEvaluatorTimeGrid = new ChordEvaluatorTimeGrid();
+        chordEvaluatorTimeGrid.initializeDirectories(args[0], args[1]);
+        chordEvaluatorTimeGrid.evaluate();
     }
 
 

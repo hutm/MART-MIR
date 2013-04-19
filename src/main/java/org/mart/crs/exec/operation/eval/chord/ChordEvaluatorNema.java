@@ -123,17 +123,11 @@ public class ChordEvaluatorNema extends ChordEvaluator {
                 chordEvalResults.add(new ChordEvalResult(song, 1, 1, 1, recognitionRate, 1, 1));
             }
 
-
             Collections.sort(chordEvalResults);
             saveResults();
 
-            chordRecognitionRateGlobal = (float) results.getOverallEvaluation(systemName).getDoubleMetadata(NemaDataConstants.CHORD_OVERLAP_RATIO);
-            chordRecognitionRateTimeBasedGlobal = (float) results.getOverallEvaluation(systemName).getDoubleMetadata(NemaDataConstants.CHORD_WEIGHTED_AVERAGE_OVERLAP_RATIO);
-
-
-            logger.info(String.format("Evaluation results: %5.4f %5.4f", chordRecognitionRateGlobal, chordRecognitionRateTimeBasedGlobal));
             //test rendering
-//            renderer.renderResults(results);
+            renderer.renderResults(results);
         } catch (IOException e) {
             logger.error(Helper.getStackTrace(e));
         } catch (InstantiationException e) {
@@ -150,7 +144,7 @@ public class ChordEvaluatorNema extends ChordEvaluator {
     }
 
     public String getResultsValuesCommaSeparated() {
-        return String.format("%5.4f,%5.4f", chordRecognitionRateGlobal, chordRecognitionRateTimeBasedGlobal);
+        return String.format("%5.3f,", chordRecognitionRateGlobal);
     }
 
 
