@@ -244,10 +244,10 @@ public class HTKResultsParserBeat {
                     continue;
                 }
 
-                startTimeIndex = Float.parseFloat(token) * ChordHTKParser.PRECISION_COEFF_LATTICE;
+                startTimeIndex = Float.parseFloat(token) * ChordHTKParser.PRECISION_COEFF_LATTICE * 10;
 
                 token = tokenizer.nextToken();
-                endTimeIndex = startTimeIndex + Float.parseFloat(token) * ChordHTKParser.PRECISION_COEFF_LATTICE;
+                endTimeIndex = startTimeIndex + Float.parseFloat(token) * ChordHTKParser.PRECISION_COEFF_LATTICE * 10;
 
                 beatNameUnparsed = tokenizer.nextToken();
                 if (beatNameUnparsed.equals(LabelsParser.START_SENTENCE) || beatNameUnparsed.equals(LabelsParser.END_SENTENCE) || beatNameUnparsed.equals("!NULL")) {
