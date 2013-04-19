@@ -159,7 +159,7 @@ public class ChordOperationDomain extends OperationDomain {
     @Override
     public List<AbstractCRSEvaluator> getEvaluators() {
         List<AbstractCRSEvaluator> outList = new ArrayList<AbstractCRSEvaluator>();
-        outList.add(new ChordEvaluator());
+//        outList.add(new ChordEvaluator());
         outList.add(new ChordEvaluatorNema());
         outList.add(new ChordEvaluatorNemaFullDictionary());
         return outList;
