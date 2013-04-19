@@ -80,9 +80,15 @@ public class BeatEvaluator extends AbstractCRSEvaluator {
     }
 
 
+    public void initializeDirectories(String recognizedLabelsDir, String groundTruthLabelsDir){
+        String filePrefix = recognizedLabelsDir.charAt(recognizedLabelsDir.length()-1) == '/' ? recognizedLabelsDir.substring(0, recognizedLabelsDir.length()-1) : recognizedLabelsDir;
+        initializeDirectories(recognizedLabelsDir, groundTruthLabelsDir, filePrefix + ".txt");
+    }
+
+
     public void evaluate() {
         File recognizedDir = HelperFile.getFile(recognizedLabelsDir);
-        File[] recognizedFileList = recognizedDir.listFiles(new ExtensionFileFilter(Extensions.BEAT_EXT));
+        File[] recognizedFileList = recognizedDir.listFiles(new ExtensionFileFilter(Extensions.BEAT_EXTENSIONS));
         LabelsSource labelsSource = new LabelsSource(groundTruthLabelsDir, true, "gt", Extensions.BEAT_EXTENSIONS);
         for (File recognizedSongFilePath : recognizedFileList) {
             String gtSongFilePath = labelsSource.getFilePathForSong(recognizedSongFilePath.getName());
@@ -143,8 +149,14 @@ public class BeatEvaluator extends AbstractCRSEvaluator {
 
     public static void main(String[] args) {                                                       //results_4_7.0_lm_10.00_ac_1.00_p_-1.00_factored_false
         BeatEvaluator evaluator = new BeatEvaluator();
-        evaluator.initializeDirectories("/home/hut/work/test_beat/DAVIESLABELS/results/ENST_DATA_4dims", "/home/hut/prg/BEAT/data/labels",
-                "/home/hut/work/test_beat/DAVIESLABELS/results/ENST_DATA_4dims.txt");
+//        evaluator.initializeDirectories("/home/hut/work/test_beat/DAVIESLABELS/results/ENST_DATA_3dims", "/home/hut/work/test_beat/DAVIESLABELS/GT",
+//                "/home/hut/work/test_beat/DAVIESLABELS/results/ENST_DATA_3dims.txt");
+
+//        evaluator.initializeDirectories("/home/hut/workspace/CHORDS/work/beats/results/test", "/home/hut/workspace/CHORDS/work/beats/labels",
+//                "/home/hut/workspace/CHORDS/work/beats/results/test.txt");
+        evaluator.initializeDirectories(args[0], args[1]);
+
+
         evaluator.evaluate();
     }
 }
