@@ -163,7 +163,9 @@ public class BeatEvaluatorNema {
     public static void main(String[] args) throws Exception {
         BeatEvaluatorNema evaluatorNema;
         String ROOTDIR = "/home/hut/prg/CHORDS3/TOOLS/nema-analytics/src/test/resources/beat/MIREX_RESULTS_BEATLES/";
-        ROOTDIR = "/home/hut/work/test_beat/DAVIESLABELS/";
+
+        ROOTDIR = "/home/hut/workspace/CHORDS/temp/temp/";
+//        ROOTDIR = "/home/hut/work/test_beat/DAVIESLABELS/";
 
         evaluatorNema = new BeatEvaluatorNema();
         evaluatorNema.initializeDirectories(ROOTDIR + "results", ROOTDIR + "GT", ROOTDIR + "out");

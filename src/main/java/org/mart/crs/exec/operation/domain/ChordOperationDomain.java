@@ -35,6 +35,7 @@ import org.mart.crs.management.features.manager.FeaturesManagerSphinx;
 import org.mart.crs.management.label.LabelsParser;
 import org.mart.crs.management.label.chord.ChordType;
 import org.mart.crs.management.label.chord.Root;
+import org.mart.crs.model.htk.parser.chord.ChordHTKParser;
 import org.mart.crs.utils.helper.Helper;
 import org.mart.crs.utils.helper.HelperFile;
 
@@ -58,6 +59,7 @@ public class ChordOperationDomain extends OperationDomain {
 
     public ChordOperationDomain() {
         Settings.labelsGroundTruthDir = Settings.chordLabelsGroundTruthDir;
+        ChordHTKParser.FEATURE_SAMPLE_RATE = 1000000;
     }
 
     public void createWordLists() {

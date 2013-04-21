@@ -22,6 +22,7 @@ import org.mart.crs.config.ExecParams;
 import org.mart.crs.config.Settings;
 import org.mart.crs.exec.operation.eval.AbstractCRSEvaluator;
 import org.mart.crs.exec.operation.eval.beat.BeatEvaluator;
+import org.mart.crs.exec.operation.eval.beat.BeatEvaluatorNema;
 import org.mart.crs.exec.operation.models.test.beat.RecognizeBeatConventionalVersionWithLMOperation;
 import org.mart.crs.exec.operation.models.test.beat.RecognizeBeatOperation;
 import org.mart.crs.exec.operation.models.training.beat.TrainingBeatLanguageModelsOperation;
@@ -29,6 +30,7 @@ import org.mart.crs.exec.scenario.stage.StageParameters;
 import org.mart.crs.logging.CRSLogger;
 import org.mart.crs.management.features.manager.FeaturesManagerChord;
 import org.mart.crs.management.features.manager.FeaturesManagerBeat;
+import org.mart.crs.model.htk.parser.chord.ChordHTKParser;
 import org.mart.crs.utils.helper.Helper;
 import org.mart.crs.utils.helper.HelperFile;
 
@@ -52,6 +54,7 @@ public class BeatOperationDomain extends OperationDomain {
 
     public BeatOperationDomain() {
         Settings.labelsGroundTruthDir = Settings.beatLabelsGroundTruthDir;
+        ChordHTKParser.FEATURE_SAMPLE_RATE = 10000000;
     }
 
     public void createWordLists() {
